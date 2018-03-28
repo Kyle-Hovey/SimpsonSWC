@@ -1,0 +1,16 @@
+extends layout
+
+block content
+ div.col-10.box-style
+    div
+      h1 Submit a News Story
+    br
+    div
+      form(role='form', action="/makerole", method="post", style='max-width: 300px; text-align: left;')
+        .form-group
+          label News Title
+          input.form-control(type='text', name="name", placeholder='Enter Role Name', style='max-width: 300px;')
+        .form-group
+          label Copy
+          br
+          textarea(name='characterbio', cols='50', rows='20', placeholder='Insert copy here...')

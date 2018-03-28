@@ -1,0 +1,56 @@
+extends layout
+
+block content
+  div.col-10.box-style
+    div
+      h1 Create a Character
+    br
+    div
+      form(role='form', action="/makerole", method="post", style='max-width: 300px; text-align: left;')
+        .form-group
+          label Character Name
+          input.form-control(type='text', name="name", placeholder='Enter Your Character\'s Name', style='max-width: 300px;')
+        .form-group
+          label Character Type
+          br
+          if user.usertype == controller
+            input(type='radio', name='roletype', id='patron', value='patron')
+            label(for='patron') Patron
+            br
+          input(type='radio', name='roletype', id='proxy', value='proxy')
+          label(for='proxy') Proxy
+          br
+          input(type='radio', name='roletype', id='wildcard', value='wildcard')
+          label(for='wildcard') Wildcard
+        .form-group
+          label System/Faction
+          br
+          input(type='radio', name='system', id='mandalore', value='mandalore')
+          label(for='mandalore') Mandalore
+          br
+          input(type='radio', name='system', id='csilla', value='csilla')
+          label(for='csilla') Csilla
+          br
+          input(type='radio', name='system', id='felucia', value='felucia')
+          label(for='felucia') Felucia
+          br
+          input(type='radio', name='system', id='manaan', value='manaan')
+          label(for='manaan') Manaan
+          br
+          input(type='radio', name='system', id='onderon', value='onderon')
+          label(for='onderon') Onderon
+          br
+          input(type='radio', name='system', id='firstorder', value='firstorder')
+          label(for='firstorder') First Order
+          br
+          input(type='radio', name='system', id='hutt', value='hutt')
+          label(for='hutt') Hutt
+          br
+        .form-group
+          label Character Biography
+          br
+          textarea(name='characterbio', cols='50', rows='20', placeholder='Describe your character')
+        button.btn.btn-default(type='submit') Submit
+        |&nbsp
+        a(href='/')
+          button.btn.btn-primary(type="button") Cancel

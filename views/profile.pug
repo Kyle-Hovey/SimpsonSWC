@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  div.col-10.box-style
+    div
+      if user.usertype == 'controller'
+        h1 Controller Profile
+      if user.usertype == 'custom' || user.usertype == 'participant'
+        h1 Player Profile
+      a(href='/editprofile')
+        button.btn.btn-primary(type='button') Edit Profile
+      |&nbsp
+      a(href='/changepassword')
+        button.btn.btn-primary(type='button') Change Password
+      br
+      br
+      h4 Name: #{user.firstName} #{user.lastName}
+      br
+      h4 Username: #{user.username}
+      br
+      h4 Email Address: #{user.email}
+      br

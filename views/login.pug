@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  div.col-8.box-style.form-style
+    div
+      h1 Login to Catonia Online
+    br
+    div
+      if (message)
+        .alert.alert-danger(role="alert") #{message}
+      form(role='form', action="/login",method="post", style='max-width: 300px;')
+        .form-group
+          h4 Username
+          input.form-control(type='text', name="username", placeholder='Enter Username')
+        .form-group
+          h4 Password
+          input.form-control(type='password', name="password", placeholder='Password')
+        button.btn.btn-default(type='submit') Submit
+        |&nbsp
+        a(href='/')
+          button.btn.btn-primary(type="button") Cancel

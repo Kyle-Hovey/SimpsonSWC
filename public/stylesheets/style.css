@@ -1,0 +1,30 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url(../images/BackgroundTile.png);
+  background-repeat: repeat;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.box-style{
+	border: 2px solid white ;
+	border-radius: 5px;
+	background-color: rgba(256, 256, 256, 0.75); 
+	padding: 10px;
+}
+
+.form-style {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: left;
+}
+
+.directory {
+	background-color: white;
+	list-style-type: none;
+}

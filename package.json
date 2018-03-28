@@ -1,0 +1,32 @@
+{
+  "name": "cantonicaonline",
+  "version": "1.0.0",
+  "main": "app.js",
+  "bin": "./bin/www",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "author": "Kyle Hovey <kyle.hovey@my.simpson.edu>",
+  "license": "MIT",
+  "engines": {
+    "node": "8.10.0"
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "chai": "~1.8.1",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "express-session": "^1.10.1",
+    "mocha": "~1.14.0",
+    "mongoose": "^4.4.1",
+    "morgan": "~1.9.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.0",
+    "pug": "^2.0.0-rc.4",
+    "serve-favicon": "~2.4.5",
+    "should": "~2.1.0"
+  }
+}
