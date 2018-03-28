@@ -45,7 +45,7 @@ mongoose.Promise = global.Promise;
 const options = {
 	useMongoClient : true
 }
-mongoose.connect('mongodb://localhost/node-auth', options)
+mongoose.connect('mongodb://ds041586.mlab.com:41586/heroku_r0z32s55', options)
 	.then(() => console.log('connection successful'))
 	.catch((err) => console.error(err));
 
