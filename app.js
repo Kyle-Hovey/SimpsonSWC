@@ -45,7 +45,7 @@ mongoose.Promise = global.Promise;
 const options = {
 	useMongoClient : true
 }
-mongoose.connect('mongodb://ds041586.mlab.com:41586/heroku_r0z32s55', options)
+mongoose.connect(process.env.MONGODB_URI, options)
 	.then(() => console.log('connection successful'))
 	.catch((err) => console.error(err));
 
