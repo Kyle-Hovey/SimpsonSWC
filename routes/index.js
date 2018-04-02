@@ -1,6 +1,5 @@
 var express = require('express');
 var account = require('../controllers/AccountController');
-//var makerole = require('../controllers/MakeRoleController');
 var router = express.Router();
 
 // Restricts Access to logged in users only
@@ -39,12 +38,7 @@ router.post('/changepassword', account.doChangePassword);
 //cnn
 router.get('/cnn', account.cnn);
 
-//Go to rolemaker page
-router.get('/charactercreator', account.characterCreator);
-
+//create news post
 router.get('/newspost', account.newsPost);
-
-//Make a role
-//router.post('/makerole', makerole.makerole);
 
 module.exports = router;

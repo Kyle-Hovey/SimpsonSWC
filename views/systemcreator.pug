@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  div.col-10.box-style
+    div
+      h1 Create a System or Faction
+    br
+    div
+      form(role='form', action="/directory/createsystem", method="post", style='max-width: 300px; text-align: left;')
+        .form-group
+          h4 Name
+          input.form-control(type='text', name='name', placeholder='Enter the name of your system or faction.')
+          h4 Crisis Overview
+          textarea(name='overview', cols='50', rows='20', placeholder='Describe the crisis taking place in your system or faction...', style='resize : none;')
+          h4 Historical Background
+          textarea(name='history', cols='50', rows='20', placeholder='Describe the history of the system or faction...', style='resize : none;')
+        .form-group
+          h4 Patrons: Separate names with commas
+          input.form-control(type='text', name='patrons', placeholder='Enter the names of system patrons')
+          h4 Proxies: Separate names with commas
+          input.form-control(type='text', name='proxies', placeholder='Enter the names of system proxies')
+          button.btn.btn-default(type='submit') Submit
+          |&nbsp
+          a(href='/')
+            button.btn.btn-primary(type="button") Cancel

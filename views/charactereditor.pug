@@ -1,0 +1,150 @@
+extends layout
+
+block scripts
+  script(type='text/javascript', src='/javascripts/characterscript.js')
+
+block content
+  div.col-8.box-style
+    div
+      h1 Edit #{character.name}
+    br
+    div
+      form(role='form', action="/directory/editcharacter" + character._id, method="post", style='max-width: 500px; text-align: left;')
+        .form-group
+          
+          h4 Name
+          input.form-control(type='text', name="name", placeholder='Enter Your Character\'s Name', value=character.name)        
+          br
+
+          mixin charactertypelist
+            if (user.usertype == 'controller')
+              option(value='patron') Patron
+              option(value='proxy') Proxy
+            option(value='wildcard') Wildcard
+
+          h4 Character Type
+          if character.characterType
+            select.form-control(name='charactertype', id='charactertype', value=character.characterType)
+              option(disabled='disabled') Select Character Type...
+              +charactertypelist
+          else
+            select.form-control(name='charactertype', id='charactertype')
+              option(disabled='disabled', selected='selected') Select Character Type...
+              +charactertypelist
+          br
+
+          #patroncontact(style = 'display: none;')
+            h4 Patron
+            if (character.contact && character.contact.characterType == 'patron')
+              select.form-control(name='patroncontact', value=character.contact._id)
+                option(disabled='disabled') Select the patron of your proxy...
+                for patron in patrons
+                  option(value=patron._id) #{patron.name}
+            else
+              select.form-control(name='patroncontact')
+                option(selected='selected', disabled='disabled') Select the patron of your proxy...
+                for patron in patrons
+                  option(value=patron._id) #{patron.name}
+            br
+
+          #proxycontact(style = 'display: none;')
+            h4 Proxy
+            if (character.contact && character.contact.characterType == 'proxy')
+              select.form-control(name='proxycontact')
+                option(disabled='disabled') Select the proxy of your patron...
+                for proxy in proxies
+                  option(value=proxy._id) #{proxy.name}
+            else
+              select.form-control(name='proxycontact')
+                option(selected='selected', disabled='disabled') Select the proxy of your patron...
+                for proxy in proxies
+                  option(value=proxy._id) #{proxy.name}
+            br
+          
+          - var occupationList = ['Accountant', 'Addict', 'Assassin', 'Banker', 'Bounty Hunter', 'Business', 'Cartographer', 'Cultist', 'Engineer', 'Farmer', 'Force User', 'Government', 'Historian', 'Medicine', 'Mercenary', 'Merchant', 'Military', 'Pilot', 'Scientist', 'Slicer', 'Spy', 'Thief', 'Thug']
+
+          h4 Occupation
+          if character.occupation
+            select.form-control(name='occupation', value=character.occupation)
+              option(disabled='disabled') Select an occupation...
+              for occupation in occupationList
+                if occupation == character.occupation
+                  option(value=occupation, selected='selected') #{occupation}
+                else
+                  option(value=occupation) #{occupation}
+          else
+            select.form-control(name='occupation')
+              option(selected='selected', disabled='disabled') Select an occupation...
+              for occupation in occupationList
+                option(value=occupation) #{occupation}
+          br
+
+          h4 Species
+          if character.species
+            input.form-control(type='text', name="species", placeholder='Enter Your Character\'s Species', value=character.species)
+          else
+            input.form-control(type='text', name="species", placeholder='Enter Your Character\'s Species',)
+          br
+
+          mixin systemlist(systems)
+            each system in systems
+              option(value=system._id) #{system.name}
+
+          h4 System/Faction
+          if character.homesystem
+            select.form-control(name='system', value='character.homesystem')
+              option(disabled='disabled') Where is your character from
+              +systemlist(systems)
+
+          else
+            select.form-control(name='system')
+              option(selected='selected', disabled='disabled') Where is your character from
+              +systemlist(systems)
+          br
+
+          h4 Backstory
+          if character.backstory
+            textarea.form-control(name='backstory', rows='15', placeholder='Character backstory', style='resize: none') #{character.backstory}
+          else
+            textarea.form-control(name='backstory', rows='15', placeholder='Character backstory', style='resize: none')
+          br
+          .proxyform
+            h4 Motive
+            if character.motives
+              textarea.form-control(name='motives', rows='3', placeholder='Character motive..', style='resize: none;') #{character.motives}
+            else
+              textarea.form-control(name='motives', rows='3', placeholder='Character motive..', style='resize: none;')
+            br
+
+            h4 Skills and Knowledge
+            #skill-container
+              if character.skills
+                for skill in character.skills
+                  .skill
+                    textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none') skill
+              else
+                textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none')
+              br
+            button.btn.btn-danger#removeskill(type='button') Remove Last
+            |&nbsp
+            button.btn.btn-primary#addskill(type='button') Add New Skill or Knowledge
+            br
+
+            #ability-container
+              h4 Special Abilities and Objects
+              if character.special
+                for special in character.special
+                  .ability
+                    textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none') special
+              else
+                textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none')
+              br
+            button.btn.btn-danger#removeability(type='button') Remove Last
+            |&nbsp
+            button.btn.btn-primary#addability(type='button') Additional Ability or Object
+        br
+        br
+        button.btn.btn-default(type='submit') Submit
+        |&nbsp
+        a(href='/')
+          button.btn.btn-primary(type="button") Cancel

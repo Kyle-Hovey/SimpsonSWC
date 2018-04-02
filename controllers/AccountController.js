@@ -127,10 +127,6 @@ accountController.cnn = function(req, res) {
 	res.render('cnn', { user : req.user });
 };
 
-accountController.characterCreator = function(req, res) {
-	res.render('characterCreator', { user : req.user });
-};
-
 accountController.newsPost = function(req,res) {
 	res.render('newspost');
 };

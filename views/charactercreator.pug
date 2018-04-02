@@ -1,55 +1,111 @@
 extends layout
 
+block scripts
+  script(type='text/javascript', src='/javascripts/characterscript.js')
+
 block content
-  div.col-10.box-style
+  div.col-8.box-style
     div
       h1 Create a Character
     br
     div
-      form(role='form', action="/makerole", method="post", style='max-width: 300px; text-align: left;')
+      form(role='form', action="/directory/createcharacter", method="post", style='max-width: 500px; text-align: left;')
         .form-group
-          label Character Name
-          input.form-control(type='text', name="name", placeholder='Enter Your Character\'s Name', style='max-width: 300px;')
-        .form-group
-          label Character Type
+          
+          h4 Name
+          input.form-control(type='text', name="name", placeholder='Enter Your Character\'s Name')        
           br
-          if user.usertype == controller
-            input(type='radio', name='roletype', id='patron', value='patron')
-            label(for='patron') Patron
+
+          h4 Character Type
+          select.form-control(name='charactertype', id='charactertype')
+            option(selected='selected', disabled='disabled') Select Character Type...
+            if user.usertype == 'controller'
+              option(value='patron') Patron
+            option(value='proxy') Proxy
+            option(value='wildcard') Wildcard
+          br
+
+          #patroncontact(style = 'display: none;')
+            h4 Patron
+            select.form-control(name='patroncontact')
+              option(selected='selected', disabled='disabled') Select the patron of your proxy...
+              for patron in patrons
+                option(value=patron._id) #{patron.name}
             br
-          input(type='radio', name='roletype', id='proxy', value='proxy')
-          label(for='proxy') Proxy
+
+          #proxycontact(style = 'display: none;')
+            h4 Proxy
+            select.form-control(name='proxycontact')
+              option(selected='selected', disabled='disabled') Select the proxy of your patron...
+              for proxy in proxies
+                option(value=proxy._id) #{proxy.name}
+            br
+
+          h4 Occupation
+          select.form-control(name='occupation')
+            option(selected='selected') Select an occupation...
+            option(value='Accountant') Accountant
+            option(value='Addict') Addict
+            option(value='Assassin') Assassin
+            option(value='Banker') Banker
+            option(value='Bounty Hunter') Bounty Hunter
+            option(value='Business') Business
+            option(value='Cartographer') Cartographer
+            option(value='Cultist') Cultist
+            option(value='Engineer') Engineer
+            option(value='Farmer') Farmer
+            option(value='Force User') Force User
+            option(value='Government') Government
+            option(value='Historian') Historian
+            option(value='Medicine') Medicine
+            option(value='Mercenary') Mercenary
+            option(value='Merchant') Merchant
+            option(value='Military') Military
+            option(value='Pilot') Pilot
+            option(value='Scientist') Scientist
+            option(value='Slicer') Slicer
+            option(value='Spy') Spy
+            option(value='Thief') Thief
+            option(value='Thug') Thug
           br
-          input(type='radio', name='roletype', id='wildcard', value='wildcard')
-          label(for='wildcard') Wildcard
-        .form-group
-          label System/Faction
+
+          h4 Species
+          input.form-control(type='text', name="species", placeholder='Enter Your Character\'s Species')
           br
-          input(type='radio', name='system', id='mandalore', value='mandalore')
-          label(for='mandalore') Mandalore
+
+          h4 System/Faction
+          select.form-control(name='system')
+            option(selected='selected') Where is your character from
+            each system in systems  
+              option(value=system._id) #{system.name}
           br
-          input(type='radio', name='system', id='csilla', value='csilla')
-          label(for='csilla') Csilla
+
+          h4 Backstory
+          textarea.form-control(name='backstory', rows='15', placeholder='Enter information about the character that everyone knows.', style='resize: none')
           br
-          input(type='radio', name='system', id='felucia', value='felucia')
-          label(for='felucia') Felucia
-          br
-          input(type='radio', name='system', id='manaan', value='manaan')
-          label(for='manaan') Manaan
-          br
-          input(type='radio', name='system', id='onderon', value='onderon')
-          label(for='onderon') Onderon
-          br
-          input(type='radio', name='system', id='firstorder', value='firstorder')
-          label(for='firstorder') First Order
-          br
-          input(type='radio', name='system', id='hutt', value='hutt')
-          label(for='hutt') Hutt
-          br
-        .form-group
-          label Character Biography
-          br
-          textarea(name='characterbio', cols='50', rows='20', placeholder='Describe your character')
+          .proxyform
+            h4 Motive
+            textarea.form-control(name='motives', rows='3', placeholder='Character motive..', style='resize: none;')
+            br
+
+            h4 Skills and Knowledge
+            #skill-container
+              textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none')
+              br
+            button.btn.btn-danger#removeskill(type='button') Remove Last
+            |&nbsp
+            button.btn.btn-primary#addskill(type='button') Add New Skill or Knowledge
+            br
+
+            #ability-container
+              h4 Special Abilities and Objects 
+              textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none')
+              br
+            button.btn.btn-danger#removeability(type='button') Remove Last
+            |&nbsp
+            button.btn.btn-primary#addability(type='button') Additional Ability or Object
+        br
+        br
         button.btn.btn-default(type='submit') Submit
         |&nbsp
         a(href='/')
