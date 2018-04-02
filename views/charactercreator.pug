@@ -29,16 +29,22 @@ block content
             h4 Patron
             select.form-control(name='patroncontact')
               option(selected='selected', disabled='disabled') Select the patron of your proxy...
-              for patron in patrons
-                option(value=patron._id) #{patron.name}
+              if patrons
+                for patron in patrons
+                  option(value=patron._id) #{patron.name}
+              else
+                option(disabled='disabled') There are no patrons
             br
 
           #proxycontact(style = 'display: none;')
             h4 Proxy
             select.form-control(name='proxycontact')
               option(selected='selected', disabled='disabled') Select the proxy of your patron...
-              for proxy in proxies
-                option(value=proxy._id) #{proxy.name}
+              if proxies
+                for proxy in proxies
+                  option(value=proxy._id) #{proxy.name}
+              else
+               option(disabled='disabled') There are no proxies
             br
 
           h4 Occupation
@@ -75,9 +81,12 @@ block content
 
           h4 System/Faction
           select.form-control(name='system')
-            option(selected='selected') Where is your character from
-            each system in systems  
-              option(value=system._id) #{system.name}
+            option(selected='selected', disabled='disabled') Where is your character from
+            if systems
+              each system in systems  
+                option(value=system._id) #{system.name}
+            else
+              option(disabled='disabled') There are no systems
           br
 
           h4 Backstory

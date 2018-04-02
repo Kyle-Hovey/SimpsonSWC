@@ -47,6 +47,12 @@ mongoose.Promise = global.Promise;
 const options = {
 	useMongoClient : true
 }
+//local db connection
+/*mongoose.connect('mongodb://localhost/node-auth', options)
+	.then(() => console.log('connection successful'))
+	.catch((err) => console.error(err));
+*/
+//production db connection
 mongoose.connect(process.env.MONGODB_URI, options)
 	.then(() => console.log('connection successful'))
 	.catch((err) => console.error(err));
