@@ -6,7 +6,7 @@ var Account = require('../models/account');
 var systemController = {};
 
 systemController.directoryHome = function(req, res) {
-	System.find().populate('patrons', 'proxies').exec(function(err, systems) {
+	System.find().populate('patrons').populate('proxies').exec(function(err, systems) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -14,7 +14,7 @@ systemController.directoryHome = function(req, res) {
 				if (err) {
 					console.log(err);
 				} else {
-					res.render('directory', {systems : systems, wildcards : wildcard});
+					res.render('directory', {systems : systems, wildcards : wildcards});
 				}
 			});
 		}
@@ -34,33 +34,69 @@ systemController.index = function (req, res) {
 };
 
 systemController.system = function (req, res) {
-	res.send('System: ' + req.params.id);
+	System.findOne({_id : req.params.id}).populate('patrons').populate('proxies').exec(function(err, system){
+			if (err) {
+				console.log(err);
+			} else {
+				//res.send(system)
+				res.render('system', {system : system});
+			}
+	});
 };
 
 systemController.creator = function (req, res) {
-	res.render('systemcreator');
+	Character.find({characterType : 'patron'}, function(err, patrons) {
+		if (err) {
+			console.log(err);
+		} else {
+			Character.find({characterType : 'proxy'}, function(err, proxies) {
+				if (err) {
+					console.log(err)
+				} else {
+					res.render('systemcreator', {user : req.user, patrons : patrons, proxies : proxies});
+				}
+			});
+		}
+	});
 };
 
 systemController.create = function (req, res) {
 	
-	var patrons = req.body.patrons.split(",");
-	var proxies = req.body.proxies.split(",");
-
-	var newSystem = new System({
-		name : req.body.name,
-		overview : req.body.overview,
-		history : req.body.history
-	});
-	console.log('Creating new system: ' + newSystem.name);
-	newSystem.save(function(err, newSystem) {
+	var newSystem = new System;
+	if (Array.isArray(req.body.patrons)) {
+		for(var i = 0, len = req.body.patrons.length; i < len; i++) {
+			newSystem.patrons.push(req.body.patrons[i]);
+		}
+	} else {
+		newSystem.patrons.push(req.body.patrons);
+	}
+	if (Array.isArray(req.body.proxies)) {
+		for(var i = 0, len = req.body.proxies.length; i < len; i++) {
+			newSystem.proxies.push(req.body.proxies[i]);
+		}
+	} else {
+		newSystem.proxies.push(req.body.proxies);
+	}
+	newSystem.name = req.body.name;
+	newSystem.crisis = req.body.crisis;
+	newSystem.history = req.body.history;
+	newSystem.owner = req.user._id;
+	newSystem.save(function(err, newSystem){
 		if (err) {
 			console.log(err);
-			return res.send(err.message);
 		} else {
-			console.log(newSystem.name + ' has been created.');
-			res.send(newSystem);
+			console.log(newSystem);
+			res.redirect('system' + newSystem._id);
 		}
 	});
+};
+
+systemController.editor = function(req, res) {
+	res.send('System Editor');
+};
+
+systemController.edit = function(req, res) {
+	res.send('Edit System');
 };
 /*
 	var patronIds = new Array();

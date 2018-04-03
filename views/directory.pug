@@ -1,11 +1,26 @@
 extends layout
 
 block content
-  div.col-8.box-style.form-style
+  div.col-8.box-style
     h1 Cantonica Conference Directory
-    h2
-      a(href='/directory/system')
-        button.btn.btn-default(type='button') Systems
-    h2
-      a(href='/directory/character')
-        button.btn.btn-default(type='button') Delegation Directory
+    h3
+      a(href='/directory/system') Systems
+    if systems
+      each system in systems
+        h4
+          a(href='/directory/system' + system._id) #{system.name}
+          if system.patrons && system.patrons.length !== 0
+            ul Patrons
+              each patron in system.patrons
+                li <a href='/directory/character' + patron._id> #{patron.name} </a>
+          if system.proxies && system.proxies.length !== 0
+            ul Proxies
+              each proxy in system.proxies
+                li <a href='/directory/character' + proxy._id> #{proxy.name} </a>
+    if wildcards && wildcards.length !== 0
+      h3 Wildcard Characters
+      ul
+        each wildcard in wildcards
+          li <a href='/directory/character' + wildcard._id> #{wildcard.name} </a>
+
+      

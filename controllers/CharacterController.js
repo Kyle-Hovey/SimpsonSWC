@@ -75,7 +75,7 @@ characterController.create = function (req, res) {
 		}
 		else{
 			console.log(newCharacter);
-			res.redirect('character' + newCharacter._id)
+			res.redirect('character' + newCharacter._id);
 		}
 	});
 };

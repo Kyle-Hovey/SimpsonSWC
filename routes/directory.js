@@ -6,16 +6,23 @@ var router = express.Router();
 //get the directory home page
 router.get('/', system.directoryHome);
 
-//get general system page
-router.get('/system', system.index);
+//edit system page
+router.get('/systemeditor:id', system.editor);
+
 //get system creator page
 router.get('/systemcreator', system.creator);
 
 //get specific system page
-router.get('/system:id', system.system)
+router.get('/system:id', system.system);
+
+//get general system page
+router.get('/system', system.index);
 
 //post system page
 router.post('/createsystem', system.create);
+
+//post edit existing system
+router.post('/editsystem:id', system.edit);
 
 //get character creator
 router.get('/charactercreator', character.creator);

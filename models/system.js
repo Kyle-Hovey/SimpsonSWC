@@ -8,19 +8,19 @@ var System = new Schema({
 	},
 	name : {
 		type : String,
-		unique : [true, '{VALUE} already exists'],
+		unique : true,
 		required : [true, 'Name is a required field']
 	},
 	crisis : String,
 	history : String,
-	patrons : {
-		type: [Schema.Types.ObjectId],
+	patrons : [{
+		type: Schema.Types.ObjectId,
 		ref : 'Character'
-	},
-	proxies : {
-		type: [Schema.Types.ObjectId],
+	}],
+	proxies : [{
+		type: Schema.Types.ObjectId,
 		ref : 'Character'
-	}
+	}]
 });
 
 module.exports = mongoose.model('System', System);

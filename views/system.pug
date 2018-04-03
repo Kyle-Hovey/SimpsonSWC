@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  div.col-8.box-style
+    div
+      h1 #{system.name}
+      br
+      a(href='/directory/systemeditor' + system._id)
+        button.btn.btn-primary(type='button') Edit
+      h4 System Crisis
+      p #{system.crisis}
+      h4 System History
+      p #{system.history}
+      h4 Patrons
+      if system.patrons && system.patrons.length !== 0
+        ul
+          each patron in system.patrons
+            li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
+      else
+        button.btn.btn-primary(type='button') Add Patron
+      h4 Proxies
+      if system.proxies && system.proxies.length !== 0
+        ul
+          each proxy in system.proxies
+            li <a href='/directory/character#{proxy._id}''> #{proxy.name} </a>
+      else
+        button.btn.btn-primary(type='button') Add Proxy
