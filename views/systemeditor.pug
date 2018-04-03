@@ -1,0 +1,85 @@
+extends layout
+
+block content
+  div.col-10.box-style
+    div
+      h1 Create a System or Faction
+    br
+    div
+      form(role='form', action="/directory/editsystem" + system._id, method="post", style='max-width: 300px; text-align: left;')
+        .form-group
+          
+          h4 Name
+          input.form-control(type='text', name='name', placeholder='Enter the name of your system or faction.', value=system.name)
+          
+          h4 Crisis Overview
+          textarea(name='crisis', cols='50', rows='20', placeholder='Describe the crisis taking place in your system or faction...', style='resize : none;') #{system.crisis}
+          
+          h4 Historical Background
+          textarea(name='history', cols='50', rows='20', placeholder='Describe the history of the system or faction...', style='resize : none;') #{system.history}
+        
+        .form-group
+          
+          h4 Patrons
+          if system.patrons && system.patrons.length !== 0
+            select.form-control(name='patrons', multiple)
+              option(disabled='disabled') Select Patrons for this system...
+              if patrons
+                  each patron in patrons
+                    -var yesorno = no
+                    each systempatron in system.patrons
+                      if patron._id == systempatron._id
+                        yesorno = yes
+                      else
+                        yesorno = no
+                    if yesorno == yes
+                      option(value=patron._id, selected='selected') #{patron.name}
+                    else if yesorno == no
+                      option(value=patron._id) #{patron.name}
+              else
+                option(disabled='disabled') There are no patrons
+            br
+          else
+            select.form-control(name='patrons', multiple)
+              option(selected='selected', disabled='disabled') Select Patrons for this system...
+              if patrons
+                each patron in patrons
+                  option(value=patron._id) #{patron.name}
+              else
+                option(disabled='disabled') There are no patrons
+            br
+          
+          h4 Proxies: Use Ctrl + click to select/deselect
+          if system.proxies && system.proxies.length !== 0
+            select.form-control(name='proxies', multiple)
+              option(disabled='disabled') Select Proxies for this system...
+              if proxies
+                  each proxy in proxies
+                    -var yesorno = no
+                    each systemproxy in system.proxies
+                      if proxy._id == systemproxy._id
+                        yesorno = yes
+                      else
+                        yesorno = no
+                    if yesorno == yes
+                      option(value=proxy._id, selected='selected') #{proxy.name}
+                    else if yesorno == no
+                      option(value=proxy._id) #{proxy.name}
+
+              else
+                option(disabled='disabled') There are no proxies
+            br
+          else
+            select.form-control(name='proxies', multiple)
+              option(selected='selected', disabled='disabled') Select Proxies for this system...
+              if proxies
+                each proxy in proxies
+                  option(value=proxy._id) #{proxy.name}
+              else
+                option(disabled='disabled') There are no proxies
+            br
+          
+          button.btn.btn-default(type='submit') Submit
+          |&nbsp
+          a(href='/')
+            button.btn.btn-primary(type="button") Cancel

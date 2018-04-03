@@ -92,149 +92,64 @@ systemController.create = function (req, res) {
 };
 
 systemController.editor = function(req, res) {
-	res.send('System Editor');
+	if (req.user){
+		System.findOne({_id : req.params.id}).populate('patrons').populate('proxies').exec(function(err, system){
+			if(err) {
+				console.log(err);
+				res.redirect(backURL, {message : err.message});
+			} else {
+				Character.find({characterType : 'patron'}, function(err, patrons) {
+					if (err) {
+						console.log(err);
+					} else {
+						Character.find({characterType : 'proxy'}, function(err, proxies) {
+							if (err) {
+								console.log(err)
+							} else {
+								res.render('systemeditor', {user : req.user, system : system,patrons : patrons, proxies : proxies});
+							}
+						});
+					}
+				});
+			}
+		})
+	}
 };
 
 systemController.edit = function(req, res) {
-	res.send('Edit System');
-};
-/*
-	var patronIds = new Array();
-	var patrons = req.body.patrons.split(",");
-	patrons.forEach(function(patron){
-		patron.trim();
-		Character.findOrCreate(patron, "patron", function(err, patron){
-			patronIds.push(patron._id);
-		});
-	});
-
-	res.send(patronIds.toString());
-
-
 	
-	//Find or create patrons listed by creator
-	var patrons = new Array();
-	patrons = req.body.patrons.split(",");
-	var patronIds = new Array();
-
-	patrons.forEach(function(patron) {
-		patron = patron.trim();
-				console.log('handling ' + patron);
-				Character.findOne({name : patron}, function(err, character) {
-					if (err) {
-						console.log(err);
-						res.send(err.message);
-					} else if (character) {
-						console.log('For Character: ' + character.name + 'added character id: ' + character._id);
-						patronIds.push(character._id);
-					} else {
-						console.log('Creating new character named ' + patron);
-						var newCharacter = new Character({name : patron, characterType : 'patron'});
-						newCharacter.save(function(err, newCharacter){
-							if (err) {
-								console.log(err);
-								return res.send(err.message);
-							} else {
-								console.log(newCharacter + ' has been created.');
-								Character.findOne({name : patron}, function(err, character) {
-									if (err){
-										return console.log(err);
-									} else {
-										patronIds.push(character._id);
-									}
-								});
-							}
-						});
-					}
-				});
-	});
-
-	console.log(patronIds.toString());
-
-	var proxies = new Array();
-	proxies = req.body.proxies.split(",");
-	var proxyIds = new Array();
-	
-	proxies.forEach(function(proxy) {
-		proxy = proxy.trim();
-				console.log('handling ' + proxy);
-				Character.findOne({name : proxy}, function(err, character) {
-					if (err) {
-						console.log(err);
-						res.send(err.message);
-					} else if (character) {
-						console.log('For Character: ' + character.name + 'added character id: ' + character._id);
-						proxyIds.push(character._id);
-					} else {
-						console.log('Creating new character named ' + proxy);
-						var newCharacter = new Character({name : proxy, characterType : 'proxy'});
-						newCharacter.save(function(err, newCharacter){
-							if (err) {
-								console.log(err);
-								return res.send(err.message);
-							} else {
-								console.log(newCharacter + ' has been created.');
-								Character.findOne({name : proxy}, function(err, character) {
-									if (err){
-										return console.log(err);
-									} else {
-										proxyIds.push(character._id);
-									}
-								});
-							}
-						});
-					}
-				});
-	});
-
-	console.log(proxyIds.toString());
-
-	
-
-function findOrCreateCharacters(characters) {
-	characters.forEach(function(character){
-		Character.findOne({name : character}, function(err, character) {
+	System.findById(req.params.id, function(err, system) {
+		system.patrons = [];
+		system.proxies = [];
+		if (Array.isArray(req.body.patrons)) {
+			for(var i = 0, len = req.body.patrons.length; i < len; i++) {
+				system.patrons.push(req.body.patrons[i]);
+			}
+		} else {
+			system.patrons.push(req.body.patrons);
+		}
+		if (Array.isArray(req.body.proxies)) {
+			for(var i = 0, len = req.body.proxies.length; i < len; i++) {
+				system.proxies.push(req.body.proxies[i]);
+			}
+		} else {
+			system.proxies.push(req.body.proxies);
+		}
+		system.name = req.body.name;
+		system.crisis = req.body.crisis;
+		system.history = req.body.history;
+		system.owner = req.user._id;
+		system.save(function(err, system) {
 			if (err) {
 				console.log(err);
-				return res.send(err.message);
 			}
-		});
-	})
-}
+			else {
+				console.log(system);
+				res.redirect('system' + system._id);
+			}
+		})
+	});
 
-function listCharacters(characters) {
-	var characterIds = new Array();
-
-	character.forEach(function(character) {
-		character = character.trim();
-				console.log('handling ' + character);
-				Character.findOne({name : character}, function(err, character) {
-					if (err) {
-						console.log(err);
-						res.send(err.message);
-					} else if (character) {
-						console.log('For Character: ' + character.name + 'added character id: ' + character._id);
-						patronIds.push(character._id);
-					} else {
-						console.log('Creating new character named ' + patron);
-						var newCharacter = new Character({name : patron, characterType : 'patron'});
-						newCharacter.save(function(err, newCharacter){
-							if (err) {
-								console.log(err);
-								return res.send(err.message);
-							} else {
-								console.log(newCharacter + ' has been created.');
-								Character.findOne({name : patron}, function(err, character) {
-									if (err){
-										return console.log(err);
-									} else {
-										patronIds.push(character._id);
-									}
-								});
-							}
-						});
-					}
-				});
-				*/
+};
 
 module.exports = systemController;
