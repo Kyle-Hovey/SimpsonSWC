@@ -15,13 +15,15 @@ block content
       if system.patrons && system.patrons.length !== 0
         ul
           each patron in system.patrons
-            li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
+            if patron !== null
+              li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
       else
         button.btn.btn-primary(type='button') Add Patron
       h4 Proxies
       if system.proxies && system.proxies.length !== 0
         ul
           each proxy in system.proxies
-            li <a href='/directory/character#{proxy._id}''> #{proxy.name} </a>
+            if proxy !== null
+              li <a href='/directory/character#{proxy._id}'> #{proxy.name} </a>
       else
         button.btn.btn-primary(type='button') Add Proxy

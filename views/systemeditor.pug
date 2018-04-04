@@ -5,6 +5,7 @@ block content
     div
       h1 Create a System or Faction
     br
+
     div
       form(role='form', action="/directory/editsystem" + system._id, method="post", style='max-width: 300px; text-align: left;')
         .form-group
@@ -21,26 +22,20 @@ block content
         .form-group
           
           h4 Patrons
-          if system.patrons && system.patrons.length !== 0
-            select.form-control(name='patrons', multiple)
+          
+          select.form-control(name='patrons', multiple)
+            if system.patrons && system.patrons.length !== 0 && system.patrons[0] !== null
               option(disabled='disabled') Select Patrons for this system...
               if patrons
                   each patron in patrons
-                    -var yesorno = no
-                    each systempatron in system.patrons
-                      if patron._id == systempatron._id
-                        yesorno = yes
-                      else
-                        yesorno = no
-                    if yesorno == yes
+                    if system.patrons.indexOf(patron._id) >= 0
                       option(value=patron._id, selected='selected') #{patron.name}
-                    else if yesorno == no
+                    else
                       option(value=patron._id) #{patron.name}
               else
                 option(disabled='disabled') There are no patrons
-            br
-          else
-            select.form-control(name='patrons', multiple)
+              br
+            else
               option(selected='selected', disabled='disabled') Select Patrons for this system...
               if patrons
                 each patron in patrons
@@ -50,34 +45,31 @@ block content
             br
           
           h4 Proxies: Use Ctrl + click to select/deselect
-          if system.proxies && system.proxies.length !== 0
-            select.form-control(name='proxies', multiple)
+
+          select.form-control(name='proxies', multiple)
+            if system.proxies && system.proxies.length !== 0 && system.proxies[0] !== null
               option(disabled='disabled') Select Proxies for this system...
               if proxies
-                  each proxy in proxies
-                    -var yesorno = no
-                    each systemproxy in system.proxies
-                      if proxy._id == systemproxy._id
-                        yesorno = yes
-                      else
-                        yesorno = no
-                    if yesorno == yes
-                      option(value=proxy._id, selected='selected') #{proxy.name}
-                    else if yesorno == no
-                      option(value=proxy._id) #{proxy.name}
-
+                each proxy in proxies
+                  -index = system.proxies.indexOf(proxy._id)
+                  if system.proxies.indexOf(proxy._id) >= 0
+                    p #{index}
+                    option(value=proxy._id, selected='selected') #{proxy.name}
+                  else
+                    p #{index}
+                    option(value=proxy._id) #{proxy.name}
               else
                 option(disabled='disabled') There are no proxies
-            br
-          else
-            select.form-control(name='proxies', multiple)
+              br
+
+            else
               option(selected='selected', disabled='disabled') Select Proxies for this system...
               if proxies
                 each proxy in proxies
                   option(value=proxy._id) #{proxy.name}
               else
                 option(disabled='disabled') There are no proxies
-            br
+              br
           
           button.btn.btn-default(type='submit') Submit
           |&nbsp

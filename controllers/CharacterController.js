@@ -8,7 +8,7 @@ characterController.character = function (req, res) {
 		if (err) {
 			console.log(err);
 		} else {
-			res.render('character', {character : character});
+			res.render('character', {user : req.user, character : character});
 		}
 	});
 };

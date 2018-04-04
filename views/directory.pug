@@ -9,14 +9,14 @@ block content
       each system in systems
         h4
           a(href='/directory/system' + system._id) #{system.name}
-          if system.patrons && system.patrons.length !== 0
+          if system.patrons && system.patrons.length !== 0  && system.proxies !== null
             ul Patrons
               each patron in system.patrons
-                li <a href='/directory/character' + patron._id> #{patron.name} </a>
-          if system.proxies && system.proxies.length !== 0
+                li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
+          if system.proxies && system.proxies.length !== 0 && system.proxies !== null
             ul Proxies
               each proxy in system.proxies
-                li <a href='/directory/character' + proxy._id> #{proxy.name} </a>
+                li <a href='/directory/character#{proxy._id}'> #{proxy.name} </a>
     if wildcards && wildcards.length !== 0
       h3 Wildcard Characters
       ul
