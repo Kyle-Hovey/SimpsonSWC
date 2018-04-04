@@ -23,6 +23,6 @@ block content
       h3 Wildcard Characters
       ul
         each wildcard in wildcards
-          li <a href='/directory/character' + wildcard._id> #{wildcard.name} </a>
+          li <a href='/directory/character#{wildcard._id}'> #{wildcard.name} </a>
 
       
