@@ -13,12 +13,11 @@ var Character = new Schema({
 	},
 	occupation : String,
 	species : String,
-	homesystem : {
-		type : Schema.Types.ObjectId,
-		ref : 'System'
-	},
+	quirks : String,
+	homesystem : String,
 	backstory : String,
-	motives : String,
+	longterm : String,
+	shortterm : String,
 	skills : [String], 
 	special : [String],
 	contact : {
@@ -29,29 +28,5 @@ var Character = new Schema({
 {
 	usePushEach: true
 });
-
-Character.statics.findOrCreate = function(characterName, characterType) {
-	this.findOne({name : characterName}, function (err, character){
-		if (err) {
-			console.log(err);
-			return err;
-		} else if (character) {
-			return character;
-		} else {
-			console.log('Creating new character named ' + characterName);
-			var newCharacter = new this({name : characterName, characterType : characterType});
-				newCharacter.save(function(err, newCharacter){
-					if (err) {
-						console.log(err);
-						return err;
-					} else {
-						console.log(newCharacter + ' has been created.')
-						return newCharacter;
-					}
-				}
-			);
-		}
-	});
-};
 
 module.exports = mongoose.model('Character', Character);

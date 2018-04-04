@@ -11,8 +11,11 @@ block content
       br
       h4 Species: #{character.species}
       br
+      h4 Species Quirks
+      p #{character.quirks}
+      br
       if (character.homesystem)
-        h4 Home System: <a href=character.homesystem._id> #{character.homesystem.name}</a>
+        h4 Home System: <a href=#{character.homesystem}> #{character.homesystem}</a>
       br
       if (character.contact)
         if (character.contact.characterType = 'proxy')
@@ -25,12 +28,18 @@ block content
       p #{character.backstory}
       if (character.characterType = 'proxy')
         h4 Motives
-        p #{character.motives}
+        h5 Short Term Objective
+        p #{character.shortterm}
+        br
+        h5 Long Term Objective
+        p #{character.longterm}
+        br
         h4 Skills and Knowledge
         ul
           each skill in character.skills
-            li skill
+            li #{skill}
+        br
         h4 Special Abilities
         ul
           each ability in character.special
-            li ability
+            li #{ability}

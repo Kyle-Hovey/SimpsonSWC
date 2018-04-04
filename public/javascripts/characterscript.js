@@ -4,16 +4,23 @@ $(document).ready(function() {
 		$('.proxyform').hide();
 		$('#proxycontact').show();
 		$('#patroncontact').hide();
+		$('.patron').show();
+		$('.wildcard').hide();
+
 	}
 	else if (type == 'proxy'){
 		$('.proxyform').show();
 		$('#patroncontact').show();
 		$('#proxycontact').hide();
+		$('.patron').show();
+		$('.wildcard').hide();
 	}
 	else if (type == 'wildcard') {
 		$('.proxyform').show();
 		$('#patroncontact').hide();
 		$('#proxycontact').hide();
+		$('.patron').hide();
+		$('.wildcard').show();
 	}
 });
 
@@ -23,16 +30,22 @@ $("#charactertype").change(function() {
 		$('.proxyform').hide();
 		$('#proxycontact').show();
 		$('#patroncontact').hide();
+		$('.patron').show();
+		$('.wildcard').hide();
 	}
 	else if (type == 'proxy'){
 		$('.proxyform').show();
 		$('#patroncontact').show();
 		$('#proxycontact').hide();
+		$('.patron').show();
+		$('.wildcard').hide();
 	}
 	else if (type == 'wildcard') {
 		$('.proxyform').show();
 		$('#patroncontact').hide();
 		$('#proxycontact').hide();
+		$('.patron').hide();
+		$('.wildcard').show();
 	}
 });
 

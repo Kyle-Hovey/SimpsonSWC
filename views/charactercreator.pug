@@ -70,23 +70,31 @@ block content
             option(value='Pilot') Pilot
             option(value='Scientist') Scientist
             option(value='Slicer') Slicer
+            option(value='Soothsayer') Soothsayer
             option(value='Spy') Spy
             option(value='Thief') Thief
             option(value='Thug') Thug
           br
 
           h4 Species
-          input.form-control(type='text', name="species", placeholder='Enter Your Character\'s Species')
+          input.form-control(type='text', name="species", placeholder='Character\'s Species')
+          br
+
+          h4 Species Quirks
+          input.form-control(type='text', name='quirks', placeholder='Quirks of species or the character')
           br
 
           h4 System/Faction
-          select.form-control(name='system')
-            option(selected='selected', disabled='disabled') Where is your character from
-            if systems
-              each system in systems  
-                option(value=system._id) #{system.name}
-            else
-              option(disabled='disabled') There are no systems
+          .patron
+            select.form-control(name='system')
+              option(selected='selected', disabled='disabled') Where is your character from
+              if systems
+                each system in systems  
+                  option(value=system.name) #{system.name}
+              else
+                option(disabled='disabled') There are no systems
+          .wildcard(style = 'display: none;')
+            input.form-control(type='text', name='system', placeholder='Character\'s Home System')
           br
 
           h4 Backstory
@@ -94,7 +102,13 @@ block content
           br
           .proxyform
             h4 Motive
-            textarea.form-control(name='motives', rows='3', placeholder='Character motive..', style='resize: none;')
+            
+            h5 Short Term
+            textarea.form-control(name='shortterm', rows='3', placeholder='Character short term objective...', style='resize: none;')
+            br
+            
+            h5 Long Term
+            textarea.form-control(name='longterm', rows='3', placeholder='Character long term objective...', style='resize: none;')
             br
 
             h4 Skills and Knowledge

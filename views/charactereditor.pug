@@ -16,21 +16,22 @@ block content
           input.form-control(type='text', name="name", placeholder='Enter Your Character\'s Name', value=character.name)        
           br
 
-          mixin charactertypelist
-            if (user.usertype == 'controller')
-              option(value='patron') Patron
-              option(value='proxy') Proxy
-            option(value='wildcard') Wildcard
+          -var charactertypelist = ['Patron', 'Proxy', 'Wildcard']
 
           h4 Character Type
           if character.characterType
             select.form-control(name='charactertype', id='charactertype', value=character.characterType)
               option(disabled='disabled') Select Character Type...
-              +charactertypelist
+              for type in charactertypelist
+                if character.characterType == type.toLowerCase()
+                  option(value=type.toLowerCase(), selected='selected') #{type}
+                else
+                  option(value=type.toLowerCase()) #{type}
           else
             select.form-control(name='charactertype', id='charactertype')
               option(disabled='disabled', selected='selected') Select Character Type...
-              +charactertypelist
+              for type in charactertypelist
+                option(value=type.toLowerCase()) #{type}
           br
 
           #patroncontact(style = 'display: none;')
@@ -61,7 +62,7 @@ block content
                   option(value=proxy._id) #{proxy.name}
             br
           
-          - var occupationList = ['Accountant', 'Addict', 'Assassin', 'Banker', 'Bounty Hunter', 'Business', 'Cartographer', 'Cultist', 'Engineer', 'Farmer', 'Force User', 'Government', 'Historian', 'Medicine', 'Mercenary', 'Merchant', 'Military', 'Pilot', 'Scientist', 'Slicer', 'Spy', 'Thief', 'Thug']
+          - var occupationList = ['Accountant', 'Addict', 'Assassin', 'Banker', 'Bounty Hunter', 'Business', 'Cartographer', 'Cultist', 'Engineer', 'Farmer', 'Force User', 'Government', 'Historian', 'Medicine', 'Mercenary', 'Merchant', 'Military', 'Pilot', 'Scientist', 'Slicer', 'Soothsayer', 'Spy', 'Thief', 'Thug']
 
           h4 Occupation
           if character.occupation
@@ -81,25 +82,43 @@ block content
 
           h4 Species
           if character.species
-            input.form-control(type='text', name="species", placeholder='Enter Your Character\'s Species', value=character.species)
+            input.form-control(type='text', name="species", placeholder='Character\'s Species', value=character.species)
           else
-            input.form-control(type='text', name="species", placeholder='Enter Your Character\'s Species',)
+            input.form-control(type='text', name="species", placeholder='Character\'s Species')
+          br
+
+          h4 Species Quirks
+          if character.quirks
+            input.form-control(type='text', name="quirks", placeholder='Quirks of species or the character', value=character.quirks)
+          else
+            input.form-control(type='text', name="quirks", placeholder='Quirks of species or the character')
           br
 
           mixin systemlist(systems)
-            each system in systems
-              option(value=system._id) #{system.name}
+              each system in systems
+                option(value=system.name) #{system.name}
 
           h4 System/Faction
           if character.homesystem
-            select.form-control(name='system', value='character.homesystem')
-              option(disabled='disabled') Where is your character from
-              +systemlist(systems)
+            if character.characterType == 'patron' || character.characterType == 'proxy'
+              select.form-control(name='system', value='character.homesystem')
+                option(disabled='disabled') Where is your character from
+                if systems
+                  +systemlist(systems)
+                else
+                  option(disabled='disabled', selected='selected') There are no systems
 
-          else
-            select.form-control(name='system')
-              option(selected='selected', disabled='disabled') Where is your character from
-              +systemlist(systems)
+              input.form-control(type='text', name='system', placeholder='Character\'s home system', style='display : none;')
+
+            else
+              select.form-control(name='system', style='display : none')
+                option(selected='selected', disabled='disabled') Where is your character from
+                if systems
+                  +systemlist(systems)
+                else
+                  option(disabled='disabled', selected='selected') There are no systems
+              
+              input.form-control(type='text', name='system', placeholder='Character\'s home system' value=character.homesystem)
           br
 
           h4 Backstory
@@ -110,10 +129,19 @@ block content
           br
           .proxyform
             h4 Motive
-            if character.motives
-              textarea.form-control(name='motives', rows='3', placeholder='Character motive..', style='resize: none;') #{character.motives}
+            br
+            h5 Short Term
+            if character.shortterm
+              textarea.form-control(name='shortterm', rows='3', placeholder='Character short term objective...', style='resize: none;') #{character.shortterm}
             else
-              textarea.form-control(name='motives', rows='3', placeholder='Character motive..', style='resize: none;')
+              textarea.form-control(name='shortterm', rows='3', placeholder='Character short term objective...', style='resize: none;')
+            br
+            
+            h5 Long Term
+            if character.longterm
+              textarea.form-control(name='longterm', rows='3', placeholder='Character long term objective...', style='resize: none;') #{character.longterm}
+            else
+              textarea.form-control(name='longterm', rows='3', placeholder='Character long term objective...', style='resize: none;')
             br
 
             h4 Skills and Knowledge
@@ -121,7 +149,7 @@ block content
               if character.skills
                 for skill in character.skills
                   .skill
-                    textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none') skill
+                    textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none') #{skill}
               else
                 textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none')
               br
@@ -135,7 +163,7 @@ block content
               if character.special
                 for special in character.special
                   .ability
-                    textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none') special
+                    textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none') #{special}
               else
                 textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none')
               br

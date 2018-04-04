@@ -4,10 +4,11 @@ var System = require('../models/system');
 var characterController = {};
 
 characterController.character = function (req, res) {
-	Character.findOne({_id : req.params.id}).populate('homesystem').populate('contact').exec(function(err, character){
+	Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character){
 		if (err) {
 			console.log(err);
 		} else {
+			//res.send(character);
 			res.render('character', {user : req.user, character : character});
 		}
 	});
@@ -41,6 +42,8 @@ characterController.creator = function (req, res) {
 
 characterController.create = function (req, res) {
 	var newCharacter = new Character;
+	console.log(req.body.skills);
+	console.log(req.body.special);	
 	if (Array.isArray(req.body.skills)){
 		for(var i = 0, len = req.body.skills.length; i < len; i++) {
 		newCharacter.skills.push(req.body.skills[i]);
@@ -71,7 +74,8 @@ characterController.create = function (req, res) {
 	}
 	newCharacter.homesystem = req.body.system;
 	newCharacter.backstory = req.body.backstory;
-	newCharacter.motives = req.body.motives;
+	newCharacter.shortterm = req.body.shortterm;
+	newCharacter.longterm = req.body.longterm;
 	newCharacter.save(function(err, newCharacter){
 		if (err) {
 			console.log(err);
@@ -87,7 +91,7 @@ characterController.editor = function(req, res) {
 	backURL = req.header('Referer') || '/';
 
 	if (req.user){
-		Character.findOne({_id : req.params.id}).populate('homesystem').populate('contact').exec(function(err, character) {
+		Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character) {
 			if (err) {
 				console.log(err)
 				res.redirect(backURL, {message : err.message});
@@ -126,6 +130,8 @@ characterController.edit = function(req, res) {
 	Character.findById(req.params.id, function(err, character) {
 		character.skills = [];
 		character.special = [];
+		console.log(req.body.skills);
+		console.log(req.body.special);
 		if (Array.isArray(req.body.skills)){
 			for(var i = 0, len = req.body.skills.length; i < len; i++) {
 			character.skills.push(req.body.skills[i]);
@@ -147,6 +153,7 @@ characterController.edit = function(req, res) {
 		character.name = req.body.name;
 		character.occupation = req.body.occupation;
 		character.species = req.body.species;
+		character.quirks = req.body.quirks;
 		character.characterType = req.body.charactertype;
 		if (req.body.charactertype == 'proxy') {
 			character.contact = req.body.patroncontact;
@@ -156,7 +163,8 @@ characterController.edit = function(req, res) {
 		}
 		character.homesystem = req.body.system;
 		character.backstory = req.body.backstory;
-		character.motives = req.body.motives;
+		character.shortterm = req.body.shortterm;
+		character.longterm = req.body.longterm;
 		character.save(function(err, newCharacter){
 			if (err) {
 				console.log(err);
