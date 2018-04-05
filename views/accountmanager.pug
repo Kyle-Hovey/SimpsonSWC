@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1 Account Manager
+  if accounts
+    ul(style='background: white;')
+      for account in accounts
+        li 
+          |#{account.firstName} #{account.lastName}
+          ul
+            li #{account.username}
+            li 
+              a(href='passwordreset/' + account._id) Reset Password
+            li Characters
+              ul
+                li 
+                  a(href='charactermanager/' + account._id) Assign/Unassign Characters
+                each character in account.roles
+                  li  #{character.name}

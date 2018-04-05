@@ -1,6 +1,7 @@
 var express = require('express');
 var passport = require('passport');
 var Account = require('../models/account');
+var Character = require('../models/character');
 
 var accountController = {};
 
@@ -120,6 +121,92 @@ accountController.doEditProfile = function(req, res) {
 	};
 
 	res.redirect('profile');
+};
+
+accountController.accountManager = function(req, res) {
+	Account.find().populate('roles').exec(function(err, accounts) {
+		if (err) {
+			console.log(err);
+		} else {
+			res.render('accountmanager', {user : req.user, accounts : accounts});
+		}
+	});
+};
+
+accountController.passwordReset = function(req, res) {
+	Account.findById(req.params.id, function(err, account) {
+		if (err) {
+					console.log(err);
+		} else{
+			res.render('passwordreset', {user : req.user, account : account});
+		}
+	});
+};
+
+accountController.resetPassword = function(req, res) {
+	Account.findById(req.params.id, function(err, account) {
+		if (err) {
+			console.log(err);
+		} else {
+			account.setPassword(req.body.newpassword, function(err, account) {
+				if (err){
+					console.log(err);
+				} else {
+					account.save(function(err) {
+						if (err) {
+							console.log(err);
+						} else {
+							res.redirect('../accountManager');
+						}
+					});
+				}
+			});
+		}
+	});
+};
+
+accountController.characterManager = function(req, res) {
+	Account.findById(req.params.id).exec(function(err, account){
+		if (err) {
+			console.log(err);
+		} else {
+			Character.find().exec(function(err, characters){
+				if (err) {
+					console.log(err);
+				} else {
+					res.render('charactermanager', {user : req.user, account : account , characters : characters});
+				}
+			});
+		}
+
+	});
+};
+
+accountController.assignCharacters = function(req, res) {
+	Account.findById(req.params.id).exec(function(err, account) {
+		if (err) {
+			console.log(err);
+		} else {
+			account.roles = []
+			if (Array.isArray(req.body.characters)) {
+				for(var i = 0, len = req.body.characters.length; i < len; i++) {
+					account.roles.push(req.body.characters[i]);
+				}
+			} else if (req.body.characters !== null) {
+				account.roles.push(req.body.characters);
+			} else {
+				account.roles = [];
+			}
+			account.save(function(err, account) {
+				if (err) {
+					console.log(err);
+				} else {
+					console.log(account);
+					res.redirect('../accountmanager')
+				}
+			})
+		}
+	})
 };
 
 //Go to cnn

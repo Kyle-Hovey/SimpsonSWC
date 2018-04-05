@@ -48,10 +48,13 @@ var Account = new Schema({
 			},
 			required : [true, 'Email is a required field.']
 		},
-	roles: {
-		type : [Schema.Types.ObjectId],
+	roles: [{
+		type : Schema.Types.ObjectId,
 		ref : 'Character'
-	}
+	}]
+},
+{
+	usePushEach: true
 });
 
 //var options = ({missingPasswordError: "Password Field Not filled out"});

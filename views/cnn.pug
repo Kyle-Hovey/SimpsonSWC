@@ -8,6 +8,7 @@ block content
           .row
             img(src='/images/CatoniaNewsNetwork.png' alt='Catonia News Network')
             br
+            if user && (user.usertype == 'controller' || (user.usertype == 'participant' && user.characters[0].system == 'cnn')
             button.btn.btn-default(type='submit') New Story
           .row
 

@@ -5,38 +5,71 @@ block content
     div
       h1 #{system.name}
       br
-      a(href='/directory/systemeditor' + system._id)
-        button.btn.btn-primary(type='button') Edit
+      if user && user.usertype == 'controller'
+        a(href='/directory/systemeditor' + system._id)
+          button.btn.btn-primary(type='button') Edit #{system.name}
       h4 System Overview
-      p #{system.overview}
+      p(style='white-space:pre;') #{system.overview}
+      br
       h4 System History
-      p #{system.history}
-      h4 Patrons
-      if system.patrons && system.patrons.length !== 0
+      p(style='white-space:pre;') #{system.history}
+      br
+
+      if system.patrons && system.patrons.length !== 0 & system.patrons[0] !== null
+      
+        h4 Patrons
+          |&nbsp
+          |&nbsp
+          |&nbsp
+          a(href='crisiseditor/' + system._id + '/' + crisis.crisisname)
+            button.btn.btn-primary(type='button') Edit Patrons
         ul
           each patron in system.patrons
             if patron !== null
               li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
+        br
+        br      
       else
-        button.btn.btn-primary(type='button') Add Patron
+        if user && user.usertype == 'controller'
+          a(href='/directory/systemeditor' + system._id)
+            button.btn.btn-primary(type='button') Add Patrons
+          br
+          br
+      if system.proxies && system.proxies.length !== 0 && system.proxies[0] !== null
       
-      h4 Proxies
-      if system.proxies && system.proxies.length !== 0
+        h4 Proxies
+          |&nbsp
+          |&nbsp
+          |&nbsp
+          if user && user.usertype == 'controller'
+            a(href='crisiseditor/' + system._id + '/' + crisis.crisisname)
+              button.btn.btn-primary(type='button') Edit Proxies
         ul
           each proxy in system.proxies
             if proxy !== null
               li <a href='/directory/character#{proxy._id}'> #{proxy.name} </a>
-
+        br
+        br
       else
-        button.btn.btn-primary(type='button') Add Proxy
-
+        if user && user.usertype == 'controller'
+          a(href='/directory/systemeditor' + system._id)
+            button.btn.btn-primary(type='button') Add Proxies
+          br
+          br
+      
       if system.crises && system.crises.length !== 0 
         each crisis in system.crises
           h4 #{crisis.crisisname}
+            |&nbsp
+            |&nbsp
+            |&nbsp
+            if user && user.usertype == 'controller'
+              a(href='crisiseditor/' + system._id + '/' + crisis.crisisname)
+                button.btn.btn-primary(type='button') Edit Crisis
           each event in crisis.crisisevents
             h5 #{event.eventtitle}
-            p #{event.eventdescription}
-          a(href='crisiseditor/' + system._id + '/' + crisis.crisisname)
-            button.btn.btn-primary(type='button') Edit Crisis
-      a(href='crisiscreator' + system._id)
-        button.btn.btn-primary(type='button') Add New Crisis
+            p(style='white-space:pre;') #{event.eventdescription}
+      
+      if user && user.usertype == 'controller'
+        a(href='crisiscreator' + system._id)
+          button.btn.btn-primary(type='button') Add New Crisis

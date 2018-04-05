@@ -84,18 +84,17 @@ systemController.create = function (req, res) {
 		newSystem.proxies = [];
 	}
 	newSystem.name = req.body.name;
-	//newSystem.crisis = req.body.crisis;
+	newSystem.overview = req.body.overveiw;
 	newSystem.history = req.body.history;
-	//newSystem.owner = req.user._id;
-	res.send(req.body.crises);
-/*	newSystem.save(function(err, newSystem){
+	newSystem.owner = req.user._id;
+	newSystem.save(function(err, newSystem){
 		if (err) {
 			console.log(err);
 		} else {
 			console.log(newSystem);
 			res.redirect('system' + newSystem._id);
 		}
-	});*/
+	});
 };
 
 systemController.editor = function(req, res) {
@@ -150,10 +149,10 @@ systemController.edit = function(req, res) {
 		} else if (req.body.proxies !== null) {
 			system.proxies.push(req.body.proxies);
 		} else {
-		newSystem.proxies = [];
+			system.proxies = [];
 		}
 		system.name = req.body.name;
-		system.crisis = req.body.crisis;
+		system.overview = req.body.overview;
 		system.history = req.body.history;
 		system.owner = req.user._id;
 		system.save(function(err, system) {

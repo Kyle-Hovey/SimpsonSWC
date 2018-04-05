@@ -35,6 +35,19 @@ router.get('/changepassword', account.changePassword);
 //Post Change Password
 router.post('/changepassword', account.doChangePassword);
 
+//Get Account Manager
+router.get('/accountmanager', account.accountManager);
+
+//Get password reset
+router.get('/passwordreset/:id', account.passwordReset);
+
+//Post reset password
+router.post('/resetpassword/:id', account.resetPassword);
+
+router.get('/charactermanager/:id', account.characterManager);
+
+router.post('/assigncharacters/:id', account.assignCharacters);
+
 //cnn
 router.get('/cnn', account.cnn);
 
