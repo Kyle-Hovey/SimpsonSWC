@@ -7,8 +7,8 @@ block content
       br
       a(href='/directory/systemeditor' + system._id)
         button.btn.btn-primary(type='button') Edit
-      h4 System Crisis
-      p #{system.crisis}
+      h4 System Overview
+      p #{system.overview}
       h4 System History
       p #{system.history}
       h4 Patrons
@@ -19,11 +19,24 @@ block content
               li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
       else
         button.btn.btn-primary(type='button') Add Patron
+      
       h4 Proxies
       if system.proxies && system.proxies.length !== 0
         ul
           each proxy in system.proxies
             if proxy !== null
               li <a href='/directory/character#{proxy._id}'> #{proxy.name} </a>
+
       else
         button.btn.btn-primary(type='button') Add Proxy
+
+      if system.crises && system.crises.length !== 0 
+        each crisis in system.crises
+          h4 #{crisis.crisisname}
+          each event in crisis.crisisevents
+            h5 #{event.eventtitle}
+            p #{event.eventdescription}
+          a(href='crisiseditor/' + system._id + '/' + crisis.crisisname)
+            button.btn.btn-primary(type='button') Edit Crisis
+      a(href='crisiscreator' + system._id)
+        button.btn.btn-primary(type='button') Add New Crisis

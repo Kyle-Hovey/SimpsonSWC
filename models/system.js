@@ -11,7 +11,7 @@ var System = new Schema({
 		unique : true,
 		required : [true, 'Name is a required field']
 	},
-	crisis : String,
+	overview : String,
 	history : String,
 	patrons : [{
 		type: Schema.Types.ObjectId,
@@ -20,7 +20,16 @@ var System = new Schema({
 	proxies : [{
 		type: Schema.Types.ObjectId,
 		ref : 'Character'
+	}],
+	crises : [{
+		crisisname : String,
+		crisisevents : [{
+			eventtitle : String,
+			eventdescription :  String}]
 	}]
+},
+{
+	usePushEach: true
 });
 
 module.exports = mongoose.model('System', System);

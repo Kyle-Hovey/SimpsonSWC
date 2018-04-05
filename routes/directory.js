@@ -18,11 +18,23 @@ router.get('/system:id', system.system);
 //get general system page
 router.get('/system', system.index);
 
+//get crisis creator
+router.get('/crisiscreator:id', system.crisisCreator);
+
 //post system page
 router.post('/createsystem', system.create);
 
 //post edit existing system
 router.post('/editsystem:id', system.edit);
+
+//post new crisis
+router.post('/createcrisis:id', system.createCrisis);
+
+//get crisis editor
+router.get('/crisiseditor/:id/:crisis', system.crisisEditor);
+
+//post edit existing system
+router.post('/editcrisis/:id/:crisis', system.editCrisis);
 
 //get character creator
 router.get('/charactercreator', character.creator);

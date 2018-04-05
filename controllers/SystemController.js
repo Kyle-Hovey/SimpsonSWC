@@ -38,7 +38,7 @@ systemController.system = function (req, res) {
 	System.findOne({_id : req.params.id}).populate('patrons').populate('proxies').exec(function(err, system){
 			if (err) {
 				console.log(err);
-				res.redirect(backURL, {message : err});
+				res.redirect(backURL);
 			} else {
 				//res.send(system)
 				res.render('system', {user : req.user, system : system});
@@ -84,17 +84,18 @@ systemController.create = function (req, res) {
 		newSystem.proxies = [];
 	}
 	newSystem.name = req.body.name;
-	newSystem.crisis = req.body.crisis;
+	//newSystem.crisis = req.body.crisis;
 	newSystem.history = req.body.history;
-	newSystem.owner = req.user._id;
-	newSystem.save(function(err, newSystem){
+	//newSystem.owner = req.user._id;
+	res.send(req.body.crises);
+/*	newSystem.save(function(err, newSystem){
 		if (err) {
 			console.log(err);
 		} else {
 			console.log(newSystem);
 			res.redirect('system' + newSystem._id);
 		}
-	});
+	});*/
 };
 
 systemController.editor = function(req, res) {
@@ -116,7 +117,7 @@ systemController.editor = function(req, res) {
 								res.redirect(backURL);
 							} else {
 								//res.send(system);
-								res.render('systemeditor', {user : req.user, system : system,patrons : patrons, proxies : proxies});
+								res.render('systemeditor', {user : req.user, system : system, patrons : patrons, proxies : proxies});
 							}
 						});
 					}
@@ -167,5 +168,97 @@ systemController.edit = function(req, res) {
 	});
 
 };
+
+
+systemController.crisisCreator = function(req, res) {
+	backURL = req.header('Referer') || '/';
+	System.findOne({_id : req.params.id}).exec(function(err, system) {
+		if (err) {
+			console.log(err);
+			res.redirect(backURL);
+		} else {
+			res.render('crisiscreator', {user : req.user, system : system});
+		}
+	});
+
+};
+
+systemController.createCrisis = function(req, res) {
+	backURL = req.header('Referer') || '/';
+	System.findById(req.params.id, function(err, system) {
+		if (err) {
+			console.log(err);
+			req.redirect(backURL);
+		} else {
+			var crisis = {crisisname : req.body.crisisname, crisisevents : []};
+			crisis.crisisname = req.body.crisisname;
+			if (Array.isArray(req.body.eventname)) {
+				for (var i =0, len = req.body.eventname.length; i < len; i++) {
+					var event = {eventtitle : req.body.eventname[i], eventdescription : req.body.eventdescription[i]};
+					crisis.crisisevents.push(event);
+				} 
+			} else {
+				var event = {eventtitle : req.body.eventname, eventdescription : req.body.eventdescription};
+				crisis.crisisevents.push(event);
+			}
+			system.crises.push(crisis);
+			system.save(function(err, system) {
+				if (err) {
+					console.log(err);
+					res.redirect(backURL);
+				} else {
+					console.log(system);
+					res.redirect('system' + system._id);
+				}
+			})
+		}
+	});
+};
+
+systemController.crisisEditor = function(req, res) {
+	backURL = req.header('Referer') || '/';
+	System.findById(req.params.id, function(err, system) {
+		if (err) {
+			console.log(err);
+			req.redirect(backURL);
+		} else {
+			function findCrisis(crisis) {
+				return crisis.crisisname == req.params.crisis;
+			}
+			var crisis = system.crises.find(findCrisis);
+			res.render('crisiseditor', {crisis : crisis, system : system});
+		}
+	})
+}
+
+systemController.editCrisis = function(req, res) {
+	backURL = req.header('Referer') || '/';
+	console.log(req.params.crisis);
+	System.findById(req.params.id, function(err, system){
+		if (err) {
+			console.log(err);
+		} else {
+			var crisis = system.crises.id(req.params.crisis);
+			crisis.crisisname = req.body.crisisname;
+			crisis.crisisevents = [];
+			if (Array.isArray(req.body.eventname)) {
+				for (var i =0, len = req.body.eventname.length; i < len; i++) {
+					var event = {eventtitle : req.body.eventname[i], eventdescription : req.body.eventdescription[i]};
+					crisis.crisisevents.push(event);
+				} 
+			} else {
+				var event = {eventtitle : req.body.eventname, eventdescription : req.body.eventdescription};
+				crisis.crisisevents.push(event);
+			}
+			system.save(function(err, system){
+				if (err) {
+					console.log(system);
+				} else {
+					res.redirect('../../system' + system._id);
+				}
+			});
+		}
+	});
+}
 
 module.exports = systemController;
