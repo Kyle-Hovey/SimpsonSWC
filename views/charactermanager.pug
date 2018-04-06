@@ -1,31 +1,33 @@
 extends layout
 
 block content
-  h1 #{account.username}'s Characters
-  br
+  .container
+    .jumbotron
+      h1 #{account.username}'s Characters
+      br
 
-  form(role='form', action='/assigncharacters/' + account._id, method='post', style='max-width: 300px; text-align: left;')
-    .form-group  
-      select.form-control(name='characters', multiple)
-        if account.roles && account.roles.length > 0 && account.roles[0] !== null
-          option(disabled='disabled') Select the characters this user controls
-          if characters
-            each character in characters
-             if account.roles.indexOf(character._id) >= 0
-              option(value=character._id, selected='selected') #{character.name}
+      form(role='form', action='/assigncharacters/' + account._id, method='post', style='max-width: 500px; text-align: left;')
+        .form-group  
+          select.form-control(name='characters', multiple)
+            if account.roles && account.roles.length > 0 && account.roles[0] !== null
+              option(disabled='disabled') Select the characters this user controls
+              if characters
+                each character in characters
+                  if account.roles.indexOf(character._id) >= 0
+                    option(value=character._id, selected='selected') #{character.name}
+                  else
+                    option(value=character.id) #{character.name}
+              else
+                option(disabled='disabled') There are no characters
+            
             else
-              option(value=character.id) #{character.name}
-          else
-            option(disabled='disabled') There are no characters
-        
-        else
-          option(selected='selected', disabled='disabled') Select the characters this user controls
-          if characters
-            each character in characters
-              option(value=character._id) #{character.name}
-          else
-            option(disabled='disabled') There are no characters
+              option(selected='selected', disabled='disabled') Select the characters this user controls
+              if characters
+                each character in characters
+                  option(value=character._id) #{character.name}
+              else
+                option(disabled='disabled') There are no characters
 
-      br
-      br
-      button.btn.btn-default(type='submit') Submit
+          br
+          br
+          button.btn.btn-default(type='submit') Submit

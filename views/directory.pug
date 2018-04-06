@@ -1,28 +1,58 @@
 extends layout
 
 block content
-  div.col-8.box-style
-    h1 Cantonica Conference Directory
-    h3
-      a(href='/directory/system') Systems
-    if systems
-      each system in systems
-        h4
-          a(href='/directory/system' + system._id) #{system.name}
-        if system.patrons && system.patrons.length !== 0  && system.patrons[0] !== null
-          h5 Patrons
-          ul
-            each patron in system.patrons
-              li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
-        if system.proxies && system.proxies.length !== 0 && system.proxies[0] !== null
-          h5 Proxies
-          ul
-            each proxy in system.proxies
-              li <a href='/directory/character#{proxy._id}'> #{proxy.name} </a>
-    if wildcards && wildcards.length !== 0
-      h3 Wildcard Characters
-      ul
-        each wildcard in wildcards
-          li <a href='/directory/character#{wildcard._id}'> #{wildcard.name} </a>
+  .container
+    .jumbotron
+      h1 Cantonica Conference Directory
+      br
+      h3
+        a(href='/directory/system') Systems
+      if systems
+        #accordion
+          each system in systems
+            if (index == 0)
+              .card
+                .card-header(id=system.name + 'heading')
+                  h5.mb-0
+                    button.btn.btn-link(data-toggle='collapse', data-target='#'+system.name+'collapse', aria-expanded='true', aria-controls=system.name+'collapse') #{system.name}
 
+                .collapse.show(id=system.name + 'collapse', aria-labelledby=system.name+'heading', data-parent='#accordion')
+                  .card-body
+                    if system.patrons && system.patrons.length !== 0  && system.patrons[0] !== null
+                      h5 Patrons
+                      ul
+                        each patron in system.patrons
+                          li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
+                    if system.proxies && system.proxies.length !== 0 && system.proxies[0] !== null
+                      h5 Proxies
+                      ul
+                        each proxy in system.proxies
+                          li <a href='/directory/character#{proxy._id}'> #{proxy.name} </a>
+
+            else
+              .card
+                .card-header(id=system.name + 'heading')
+                  h5.mb-0
+                    button.btn.btn-link.collapsed(data-toggle='collapse', data-target='#'+system.name+'collapse', aria-expanded='false', aria-controls=system.name+'collapse') #{system.name}
+
+                .collapse(id=system.name + 'collapse', aria-labelledby=system.name+'heading', data-parent='#accordion')
+                  .card-body
+                    a(href='/directory/system' + system._id) #{system.name}
+                    if system.patrons && system.patrons.length !== 0  && system.patrons[0] !== null
+                      h5 Patrons
+                      ul
+                        each patron in system.patrons
+                          li <a href='/directory/character#{patron._id}'> #{patron.name} </a>
+                    if system.proxies && system.proxies.length !== 0 && system.proxies[0] !== null
+                      h5 Proxies
+                      ul
+                        each proxy in system.proxies
+                          li <a href='/directory/character#{proxy._id}'> #{proxy.name} </a>
       
+      if wildcards && wildcards.length !== 0
+        h3 Wildcard Characters:
+          |&nbsp 
+          a.font-weight-light(href='/directory/characters') Go to all characters
+        ul
+          each wildcard in wildcards
+            li <a href='/directory/character#{wildcard._id}'> #{wildcard.name} </a>      

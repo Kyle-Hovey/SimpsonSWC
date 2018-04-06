@@ -1,27 +1,41 @@
 extends layout
 
 block content
-  .col-8.box-style
+  .container
+    .row.justify-content-center
+      img(src='/images/CatoniaNewsNetwork.png' alt='Catonia News Network')
+    br
+    if user
+      if user.usertype == 'controller'
+        .row.justify-content-center
+          a(href='/cnn/newarticle')
+            button.btn.btn-warning(type='button') New Story
+      else if user.roles && user.roles.length !== 0 & user.roles[0] !== null
+        if (user.usertype == 'participant' && user.roles[0].system == 'cnn')
+          .row.justify-content-center
+            a(href='/cnn/newarticle')
+              button.btn.btn-warnning(type='button') New Story
+    br
     .row
-      .col-sm-12
-        .col-sm-8
-          .row
-            img(src='/images/CatoniaNewsNetwork.png' alt='Catonia News Network')
-            br
-            if user && (user.usertype == 'controller' || (user.usertype == 'participant' && user.characters[0].system == 'cnn')
-            button.btn.btn-default(type='submit') New Story
-          .row
+      if articles
+        each article, index in articles
+          if index == 0
+            .card.m-1(style='width: 36rem;')
+              .card-body
+                h3.card-title #{article.title}
+                if article.author
+                  h6.card-subtitle.mb-2.text-muted By #{article.author.name}
+                p.card-text #{article.brief}...
+                a.card-link(href='/cnn/article'+article._id) Read More
+          else
+            .card.m-1(style='width: 18rem;')
+              .card-body
+                h3.card-title #{article.title}
+                if article.author
+                  h6.card-subtitle.mb-2.text-muted By #{article.author.name}
+                p.card-text #{article.brief}...
+                a.card-link(href='/cnn/article'+article._id) Read More
 
-        .col-sm-4.order-last.directory
-          ul.nav.flex-column 
-            h3 Directory
-            li.nav-item
-              a.nav-link(href='#') Link
-            li.nav-item
-              a.nav-link(href='#') Link
-            li.nav-item
-              a.nav-link(href='#') Link
-            li.nav-item
-              a.nav-link(href='#') Link
+
 
 

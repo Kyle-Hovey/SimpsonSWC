@@ -4,11 +4,10 @@ block scripts
   script(type='text/javascript', src='/javascripts/characterscript.js')
 
 block content
-  div.col-8.box-style
-    div
+  .container
+    .jumbotron
       h1 Create a Character
-    br
-    div
+      br
       form(role='form', action="/directory/createcharacter", method="post", style='max-width: 500px; text-align: left;')
         .form-group
           
@@ -131,5 +130,5 @@ block content
         br
         button.btn.btn-default(type='submit') Submit
         |&nbsp
-        a(href='/')
+        a(href='/directory')
           button.btn.btn-primary(type="button") Cancel

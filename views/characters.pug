@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .container
+    .jumbotron
+      h1 Conference Attendees
+      br
+      h4 Patrons
+      if patrons
+        ul
+          each patron in patrons
+            li
+              a(href='/directory/character'+patron._id) #{patron.name}
+      br
+      h4 Proxies
+      if proxies
+        ul
+          each proxy in proxies
+            li
+              a(href='/directory/character'+proxy._id) #{proxy.name}
+      br
+      h4 Wildcards
+      if wildcards
+        ul
+          each wildcard in wildcards
+            li
+              a(href='/directory/character'+wildcard._id) #{wildcard.name}

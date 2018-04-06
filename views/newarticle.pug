@@ -1,0 +1,45 @@
+extends layout
+
+block content
+
+  .container
+    .jumbotron
+
+      h1 Submit New CNN Article
+      br
+
+      form(role='form', action="/cnn/postarticle", method="post", style='max-width: 500px; text-align: left;')
+
+        h4 Article Title
+        input.form-control(type='text', name='title', placeholder='Title of article...')
+        br
+
+        h4 Article Copy
+        textarea.form-control(name='copy',rows='15', placeholder='Copy of article...', style='resize:none' )
+        br
+
+        h4 Systems involved in this story:
+        select.form-control(name='systems',size='6', multiple)
+              option(selected='selected', disabled='disabled') Select Systems talked about in the story...
+            
+              if systems
+                for system in systems
+                  option(value=system._id) #{system.name}
+            
+              else
+                option(disabled='disabled') There are no systems
+              br
+        br
+        h4 Characters involved in this story:
+        select.form-control(name='characters',size='6', multiple)
+              option(selected='selected', disabled='disabled') Select characters talked about in the story...
+            
+              if characters
+                for character in characters
+                  option(value=character._id) #{character.name}
+            
+              else
+                option(disabled='disabled') There are no characters
+              br
+        br
+        button.btn.btn-default(type='submit') Submit

@@ -1,19 +1,49 @@
 extends layout
 
 block content
-  h1 Account Manager
-  if accounts
-    ul(style='background: white;')
-      for account in accounts
-        li 
-          |#{account.firstName} #{account.lastName}
-          ul
-            li #{account.username}
-            li 
-              a(href='passwordreset/' + account._id) Reset Password
-            li Characters
-              ul
-                li 
-                  a(href='charactermanager/' + account._id) Assign/Unassign Characters
-                each character in account.roles
-                  li  #{character.name}
+  .container
+    .jumbotron
+      h1 Account Manager
+      br
+      br
+      if accounts
+        #accordion
+          each account, index in accounts
+            if (index == 0)
+              .card
+                .card-header(id=account.username + 'heading')
+                  h5.mb-0
+                    button.btn.btn-link(data-toggle='collapse', data-target='#'+account.username+'collapse', aria-expanded='true', aria-controls=account.username+'collapse') #{account.firstName} #{account.lastName}
+
+                .collapse.show(id=account.username + 'collapse', aria-labelledby=account.username+'heading', data-parent='#accordion')
+                  .card-body
+                    h6 Username: #{account.username}
+                    h6
+                      a(href='passwordreset/' + account._id) Reset Password...
+                    h6 Account Characters
+                    ul
+                      if account.roles && account.roles.length > 0 && account.roles[0] !== null
+                        each character in account.roles
+                          li
+                            a(href='/directory/character' + character._id) #{character.name}
+                      li 
+                        a(href='charactermanager/' + account._id) Manage account characters...
+
+            else
+              .card
+                .card-header(id=account.username + 'heading')
+                  h5.mb-0
+                    button.btn.btn-link.collapsed(data-toggle='collapse', data-target='#'+account.username+'collapse', aria-expanded='false', aria-controls=account.username+'collapse') #{account.firstName} #{account.lastName}
+
+                .collapse(id=account.username + 'collapse', aria-labelledby=account.username+'heading', data-parent='#accordion')
+                  .card-body
+                    h6 Username: #{account.username}
+                    h6
+                      a(href='passwordreset/' + account._id) Reset Password...
+                    h6 Account Characters
+                    ul
+                      each character in account.roles
+                        li
+                          a(href='/directory/character' + character._id) #{character.name}
+                      li 
+                        a(href='charactermanager/' + account._id) Manage account characters...

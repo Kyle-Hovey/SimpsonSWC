@@ -7,7 +7,15 @@ var accountController = {};
 
 // GET home page. Restricts Access to people with accounts
 accountController.home = function(req, res) {
-  res.render('index', { user : req.user });
+  if (req.user){
+	  Account.findById(req.user._id).populate('roles').exec(function(err, account){
+  		if (err) {
+  			console.log(err);
+	  	} else{
+  			res.render('index', { user : account });
+  		}
+  	});
+	} else res.render('index', {user : req.user});
 };
 
 //Go to registration page
@@ -207,15 +215,6 @@ accountController.assignCharacters = function(req, res) {
 			})
 		}
 	})
-};
-
-//Go to cnn
-accountController.cnn = function(req, res) {
-	res.render('cnn', { user : req.user });
-};
-
-accountController.newsPost = function(req,res) {
-	res.render('newspost');
 };
 
 module.exports = accountController;

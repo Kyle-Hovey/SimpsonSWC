@@ -4,11 +4,10 @@ block scripts
   script(type='text/javascript', src='/javascripts/characterscript.js')
 
 block content
-  div.col-8.box-style
-    div
+  .container
+    .jumbotron
       h1 Edit #{character.name}
-    br
-    div
+      br
       form(role='form', action="/directory/editcharacter" + character._id, method="post", style='max-width: 500px; text-align: left;')
         .form-group
           
@@ -101,7 +100,7 @@ block content
           h4 System/Faction
           if character.homesystem
             if character.characterType == 'patron' || character.characterType == 'proxy'
-              select.form-control(name='system', value='character.homesystem')
+              select.form-control(name='system', value=character.homesystem)
                 option(disabled='disabled') Where is your character from
                 if systems
                   +systemlist(systems)
@@ -119,6 +118,15 @@ block content
                   option(disabled='disabled', selected='selected') There are no systems
               
               input.form-control(type='text', name='system', placeholder='Character\'s home system' value=character.homesystem)
+          else
+            select.form-control(name='system', value=character.homesystem)
+              option(disabled='disabled', selected='selected') Where is your character from
+              if systems
+                +systemlist(systems)
+              else
+                option(disabled='disabled', selected='selected') There are no systems
+
+            input.form-control(type='text', name='system', placeholder='Character\'s home system', style='display : none;')
           br
 
           h4 Backstory
@@ -150,12 +158,14 @@ block content
                 for skill in character.skills
                   .skill
                     textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none') #{skill}
+                    br
               else
                 textarea.form-control(name='skills', rows='3', placeholder='Character\'s skills and knowledge...', style='resize: none')
-              br
+                br
             button.btn.btn-danger#removeskill(type='button') Remove Last
             |&nbsp
             button.btn.btn-primary#addskill(type='button') Add New Skill or Knowledge
+            br
             br
 
             #ability-container
@@ -164,9 +174,10 @@ block content
                 for special in character.special
                   .ability
                     textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none') #{special}
+                    br
               else
                 textarea.form-control(name='special', rows='3', placeholder='Character\'s abilities and objects...', style='resize: none')
-              br
+                br
             button.btn.btn-danger#removeability(type='button') Remove Last
             |&nbsp
             button.btn.btn-primary#addability(type='button') Additional Ability or Object
@@ -174,5 +185,5 @@ block content
         br
         button.btn.btn-default(type='submit') Submit
         |&nbsp
-        a(href='/')
+        a(href='/directory/character'+character._id)
           button.btn.btn-primary(type="button") Cancel

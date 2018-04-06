@@ -4,23 +4,25 @@ block scripts
   script(type='text/javascript', src='/javascripts/systemscript.js')
 
 block content
-  div.col-10.box-style
-    div
+  .container
+    .jumbotron
       h1 Add Crisis to #{system.name}
-    br
-    div
+      br
       form(role='form', action="/directory/createcrisis" + system._id, method="post", style='max-width: 500px; text-align: left;')
         .form-group.crisis(name='crisis')
               
           h4 Crisis Name
           input.form-control(type='text', name='crisisname', placeholder='Title of the crisis')
-                        
+          br
+
           h5 Crisis Event
           input.form-control(type='text', name='eventname', placeholder='Event related to the crisis')
-                
+          br
+
           h5 Event Description
           textarea.form-control(type='text', name='eventdescription', placeholder='Description of event', style='resize : none;')
           br
           button.btn.btn-primary.addevent(type="button") Add Event to Crisis
+        
         br
         button.btn.btn-primary(type="submit") Submit

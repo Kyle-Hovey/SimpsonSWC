@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  .container
+    .jumbotron
+      h1.display-4 #{character.name}'s Chats
+      br
+      if chats && chats.length > 0 && chats[0] !== null
+        each chat in chats
+          if chat.creator._id == character._id
+            h4 #{chat.recipient.name}
+          else if chat.recipient._id == character._id
+          br
+        br
+      else
+        h4 You don't have any chats. Start a new one below!
+        br
+
+      form.form-inline(role='form', action="/messenger/newchat/" + character._id, method="post", style='text-align: left;')
+        select.form-control.mr-2.mr-sm-2(name='recipient')
+          if (character.contact && character.contact.characterType == 'patron')
+            option(value=character.contact._id) #{character.contact.name}
+          each contact in directory
+            option(value=contact._id) #{contact.name}
+
+        button.btn.btn-primary(type='submit') New Chat

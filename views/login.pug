@@ -1,11 +1,10 @@
 extends layout
 
 block content
-  div.col-8.box-style.form-style
-    div
-      h1 Login to Catonia Online
-    br
-    div
+  .container
+    .jumbotron
+      h1 Login
+      br
       if (message)
         .alert.alert-danger(role="alert") #{message}
       form(role='form', action="/login",method="post", style='max-width: 300px;')

@@ -3,6 +3,16 @@ var Character = require('../models/character');
 var System = require('../models/system');
 var characterController = {};
 
+characterController.characters = function(req, res){
+	Character.find({characterType : 'patron'}).exec(function(err, patrons){
+		Character.find({characterType : 'proxy'}).exec(function(err, proxies){
+			Character.find({characterType: 'wildcard'}).exec(function(err, wildcards){
+				res.render('characters', {user : req.user, patrons : patrons, proxies: proxies, wildcards: wildcards});
+			})
+		})
+	})
+}
+
 characterController.character = function (req, res) {
 	Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character){
 		if (err) {
@@ -65,6 +75,7 @@ characterController.create = function (req, res) {
 	newCharacter.name = req.body.name;
 	newCharacter.occupation = req.body.occupation;
 	newCharacter.species = req.body.species;
+	newCharacter.quirks = req.body.quirks;
 	newCharacter.characterType = req.body.charactertype;
 	if (req.body.charactertype == 'proxy') {
 		newCharacter.contact = req.body.patroncontact;
@@ -72,7 +83,7 @@ characterController.create = function (req, res) {
 	if (req.body.charactertype == 'patron') {
 		newCharacter.contact = req.body.proxycontact;
 	}
-	newCharacter.homesystem = req.body.system;
+	newCharacter.homesystem = req.body.system.toString().replace(",", "");
 	newCharacter.backstory = req.body.backstory;
 	newCharacter.shortterm = req.body.shortterm;
 	newCharacter.longterm = req.body.longterm;
@@ -161,7 +172,7 @@ characterController.edit = function(req, res) {
 		if (req.body.charactertype == 'patron') {
 			character.contact = req.body.proxycontact;
 		}
-		character.homesystem = req.body.system;
+		character.homesystem = req.body.system.toString().replace(",", "");
 		character.backstory = req.body.backstory;
 		character.shortterm = req.body.shortterm;
 		character.longterm = req.body.longterm;

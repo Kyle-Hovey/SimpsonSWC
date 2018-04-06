@@ -48,10 +48,4 @@ router.get('/charactermanager/:id', account.characterManager);
 
 router.post('/assigncharacters/:id', account.assignCharacters);
 
-//cnn
-router.get('/cnn', account.cnn);
-
-//create news post
-router.get('/newspost', account.newsPost);
-
 module.exports = router;

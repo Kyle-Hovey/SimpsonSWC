@@ -42,6 +42,9 @@ router.get('/charactercreator', character.creator);
 //edit character
 router.get('/charactereditor:id', character.editor);
 
+//get all characters
+router.get('/characters', character.characters);
+
 //get specific character page
 router.get('/character:id', character.character);
 

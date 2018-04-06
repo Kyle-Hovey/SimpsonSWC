@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  div.col-10.box-style
-    div
+  .container
+    .jumbotron
       if user.usertype == 'controller'
         h1 Controller Profile
       if user.usertype == 'custom' || user.usertype == 'participant'

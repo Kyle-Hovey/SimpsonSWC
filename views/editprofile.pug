@@ -1,19 +1,20 @@
 extends layout
 
 block content
-  div.col-10.box-style
-    div
+  .container
+    .jumbotron
       h1 Edit Profile
-    br
-    div
+      br
       form(role='form', action='/editprofile', method='post', style='max-width: 300px; text-align: left;')
         .form-group
           h4 First Name
-          input(type='text', name='firstname', placeholder=user.firstName)
+          input.form-control(type='text', name='firstname', placeholder=user.firstName)
+          br
           h4 Last Name
-          input(type='text', name='lastname', placeholder=user.lastName)
+          input.form-control(type='text', name='lastname', placeholder=user.lastName)
+          br
           h4 Email
-          input(type='text', name='email', placeholder=user.email)
+          input.form-control(type='text', name='email', placeholder=user.email)
         button.btn.btn-default(type='submit') Submit
         |&nbsp
         a(href='/profile')

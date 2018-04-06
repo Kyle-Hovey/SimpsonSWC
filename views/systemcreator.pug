@@ -1,11 +1,10 @@
 extends layout
 
 block content
-  div.col-10.box-style
-    div
+  .container
+    .jumbotron
       h1 Create a System or Faction
-    br
-    div
+      br
       form(role='form', action="/directory/createsystem", method="post", style='max-width: 500px; text-align: left;')
         
         .form-group

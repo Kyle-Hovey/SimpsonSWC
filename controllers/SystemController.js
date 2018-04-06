@@ -84,7 +84,7 @@ systemController.create = function (req, res) {
 		newSystem.proxies = [];
 	}
 	newSystem.name = req.body.name;
-	newSystem.overview = req.body.overveiw;
+	newSystem.overview = req.body.overview;
 	newSystem.history = req.body.history;
 	newSystem.owner = req.user._id;
 	newSystem.save(function(err, newSystem){

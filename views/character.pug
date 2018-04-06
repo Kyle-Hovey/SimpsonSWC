@@ -1,45 +1,52 @@
 extends layout
 
 block content
-  div.col-8.box-style
-    div
+  .container
+    .jumbotron
       h1 #{character.name}
+        if user && user.usertype == 'controller'
+          |&nbsp
+          |&nbsp
+          |&nbsp
+          a(href='/directory/charactereditor' + character._id)
+            button.btn.btn-primary(type='button') Edit
       br
-      a(href='/directory/charactereditor' + character._id)
-        button.btn.btn-primary(type='button') Edit
       h4 Occupation: #{character.occupation}
       br
       h4 Species: #{character.species}
       br
-      h4 Species Quirks
-      p #{character.quirks}
+      if (character.quirks)
+        h4 Species Quirks
+        p #{character.quirks}
       br
       if (character.homesystem)
         h4 Home System: <a href=#{character.homesystem}> #{character.homesystem}</a>
-      br
+        br
       if (character.contact)
-        if (character.contact.characterType = 'proxy')
-          h4 Proxy: <a href=character.contact._id> #{character.contact.name} </a>
+        if (character.contact.characterType == 'proxy')
+          h4 Proxy: <a href='character#{character.contact._id}'> #{character.contact.name} </a>
           br
-        if (character.contact.characterType = 'patron')
-          h4 Patron: <a href=character.contact._id> #{character.contact.name} </a>
+        if (character.contact.characterType == 'patron')
+          h4 Patron: <a href='character#{character.contact._id}'> #{character.contact.name} </a>
           br
       h4 Backstory
-      p #{character.backstory}
-      if (character.characterType = 'proxy')
-        h4 Motives
-        h5 Short Term Objective
-        p #{character.shortterm}
-        br
-        h5 Long Term Objective
-        p #{character.longterm}
-        br
-        h4 Skills and Knowledge
-        ul
-          each skill in character.skills
-            li #{skill}
-        br
-        h4 Special Abilities
-        ul
-          each ability in character.special
-            li #{ability}
+      -var backstory = character.backstory.replace(/[\r\n]/g, '<br/>');
+      p.lead !{backstory}
+      if (user)
+        if (character.characterType == 'proxy' && (user.usertype == 'controller' || user.roles.indexOf(character._id) > 0))
+          h4 Motives
+          h5 Short Term Objective
+          p #{character.shortterm}
+          br
+          h5 Long Term Objective
+          p #{character.longterm}
+          br
+          h4 Skills and Knowledge
+          ul
+            each skill in character.skills
+              li #{skill}
+          br
+          h4 Special Abilities
+          ul
+            each ability in character.special
+              li #{ability}

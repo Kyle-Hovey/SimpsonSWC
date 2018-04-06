@@ -1,43 +1,41 @@
 extends layout
 
 block content
-  div.col-8.box-style.form-style
-    h1 Registration Page
-    p.lead Welcome to the Cantonica Conference of Outer World Systems. Please register for the game by filling out all fields below.
-    br
-    if (error)
-      .alert.alert-danger(role="alert") #{error}
-    form(role='form', action="/register",method="post", style='max-width: 300px; text-align: left;')
-      .form-group
-        label(for='username') Username
-        input.form-control(type='text', name="username", placeholder='Enter Username')
-      .form-group
-        label(for='password') Password
-        input.form-control(type='password', name="password", placeholder='Password')
-      .form-group
-        label(for='firstname') First Name
-        input.form-control(type='text', name='firstname', placeholder='Enter First Name')
-      .form-group
-        label(for='lastname') Last Name
-        input.form-control(type='text', name='lastname', placeholder='Enter Last Name')
-      .form-group
-        label(for='email') Email Address
-        input.form-control(type='text', name='email', placeholder='Enter Email Address')
-      .form-group
-        label Usertype
-        br
-        input(type='radio', name='usertype', id='controller', value='controller')
+  .container
+    .jumbotron
+      h1 Registration Page
+      p.lead Welcome to the Cantonica Conference of Outer World Systems. Please register for the game by filling out all fields below.
+      br
+      if (error)
+        .alert.alert-danger(role="alert") #{error}
+      form(role='form', action="/register",method="post", style='max-width: 300px; text-align: left;')
+        .form-group
+          label(for='username') Username
+          input.form-control(type='text', name="username", placeholder='Enter Username')
+        .form-group
+          label(for='password') Password
+          input.form-control(type='password', name="password", placeholder='Password')
+        .form-group
+          label(for='firstname') First Name
+          input.form-control(type='text', name='firstname', placeholder='Enter First Name')
+        .form-group
+          label(for='lastname') Last Name
+          input.form-control(type='text', name='lastname', placeholder='Enter Last Name')
+        .form-group
+          label(for='email') Email Address
+          input.form-control(type='text', name='email', placeholder='Enter Email Address')
+        .form-group
+          label Usertype
+          br
+          input(type='radio', name='usertype', id='controller', value='controller')
+          |&nbsp
+          label(for='controller') Simulation Controller
+          br
+          input(type='radio', name='usertype', id='participant', value='participant')
+          |&nbsp
+          label(for='participant') Simulation Participant
+          br
+        button.btn.btn-default(type='submit') Submit
         |&nbsp
-        label(for='controller') Simulation Controller
-        br
-        input(type='radio', name='usertype', id='participant', value='participant')
-        |&nbsp
-        label(for='participant') Simulation Participant
-        br
-        input(type='radio', name='usertype', id='custom', value='custom')
-        |&nbsp
-        label(for='custom') Custom Simulation Participant
-      button.btn.btn-default(type='submit') Submit
-      |&nbsp
-      a(href='/')
-        button.btn.btn-primary(type="button") Cancel
+        a(href='/')
+          button.btn.btn-primary(type="button") Cancel
