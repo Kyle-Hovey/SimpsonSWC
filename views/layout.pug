@@ -36,14 +36,6 @@ html
                       a.dropdown-item(href='/character/' + character._id) #{character.name}                
               li.nav-item
                 a.nav-link(href='/accountmanager') Account Management
-              li.nav-item.dropdown
-                if (user.roles && user.roles.length > 0 && user.roles[0] !== null)
-                  a.nav-link.dropdown-toggle#messengerdropdown(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false') Messaging
-                  .dropdown-menu(aria-labelledby='directorydropdown')
-                    each character in user.roles
-                      a.dropdown-item(href='/messenger/' + character._id) #{character.name}'s Chats
-                else
-                  a.nav-link(href='/messenger') Messenger
 
             else if (user && user.usertype == 'participant')
               li.nav-item
@@ -58,12 +50,6 @@ html
                     .dropdown-divider
                     each character in user.roles
                       a.dropdown-item(href='/character' + character._id) #{character.name}
-              li.nav-item
-                if (user.roles && user.roles.length > 0 && user.roles[0] !== null)
-                  each character in user.roles
-                    a.nav-link(href='/messenger/' + character._id) #{character.name}
-                else
-                  a.nav-link(href='/messenger') Messenger
 
             else
               li.nav-item
