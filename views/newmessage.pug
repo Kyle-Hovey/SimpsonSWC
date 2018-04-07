@@ -27,7 +27,8 @@ block content
               else if user.usertype && user.usertype == 'participant'
                 if user.roles && user.roles.length > 0 && user.roles[0] !== null
                   each role in user.roles
-                    option(value=role.contact._id) #{role.contact.name}
+                    if role.contact
+                      option(value=role.contact._id) #{role.contact.name}
               each wildcard in wildcards
                 option(value=wildcard._id) #{wildcard.name}
 
