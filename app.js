@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var directory = require('./routes/directory');
 var cnn = require('./routes/cnn');
+var messenger = require('./routes/messenger');
 
 var app = express();
 
@@ -37,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/',routes);
 app.use('/directory', directory);
 app.use('/cnn', cnn);
-
+app.use('/messenger', messenger);
 //passport config
 var Account = require('./models/account');
 passport.use(new localStrategy(Account.authenticate()));
@@ -54,6 +55,7 @@ const options = {
 	.then(() => console.log('connection successful'))
 	.catch((err) => console.error(err));
 */
+
 //production db connection
 mongoose.connect(process.env.MONGODB_URI, options)
 	.then(() => console.log('connection successful'))
