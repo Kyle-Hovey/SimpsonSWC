@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  .container
+    .jumbotron
+      h1 Messages
+        |&nbsp
+        a(href='/messenger/newmessage')
+          button.btn.btn-primary(type='button') New Message
+      if messages
+        each message in messages
+          .card.mb-2
+            .card-body
+              h4.card-title From #{message.from.name} to #{message.to.name}
+              p.card-text #{message.message}
+            .card-footer
+              small.text-muted #{moment(message.createdAt).fromNow()}

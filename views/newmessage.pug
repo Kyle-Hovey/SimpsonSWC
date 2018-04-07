@@ -5,6 +5,34 @@ block content
     .jumbotron
       h1 New Message
       br
-      h4 Message Title
-      input.form-control(type='text', name='title', style)
-      textarea.form-control
+      form(role='form', action="/messenger/newmessage", method="post")
+        .form-row
+          .form-group.col-md-6
+            h4 From:
+            select.form-control(name='from')
+              if user.usertype && user.usertype == 'controller'
+                each patron in patrons
+                  option(value=patron._id) #{patron.name}
+              else if user.usertype && user.usertype == 'participant'
+                if user.roles && user.roles.length > 0 && user.roles[0] !== null
+                  each role in user.roles
+                    option(value=role._id) #{role.name}
+        
+          .form-group.col-md-6
+            h4 To:
+            select.form-control(name='to')
+              if user.usertype && user.usertype == 'controller'
+                each proxy in proxies
+                  option(value=proxy._id) #{proxy.name}
+              else if user.usertype && user.usertype == 'participant'
+                if user.roles && user.roles.length > 0 && user.roles[0] !== null
+                  each role in user.roles
+                    option(value=role.contact._id) #{role.contact.name}
+              each wildcard in wildcards
+                option(value=wildcard._id) #{wildcard.name}
+
+        .form-group
+          h4 Message: 
+          textarea.form-control(name='message',rows:'5', placeholder='Message...', style='resize: none;')
+
+        button.btn.btn-default(type='submit') Send
