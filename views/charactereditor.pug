@@ -123,7 +123,8 @@ block content
             select.form-control(name='system', value=character.homesystem)
               option(disabled='disabled', selected='selected') Where is your character from
               if systems
-                +systemlist(systems)
+                each system in systems
+                  option(value=system.name) #{system.name}
               else
                 option(disabled='disabled', selected='selected') There are no systems
 
