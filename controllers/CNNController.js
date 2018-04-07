@@ -8,29 +8,59 @@ var Article = require('../models/article');
 var cnnController = {};
 
 cnnController.index = function(req, res) {
-	Article.find().populate('author').sort('-createdAt').exec(function(err, articles) {
-		if (err) {
-			console.log(err);
-		} else {
-			res.render('cnn', {user : req.user, articles : articles, moment : moment});
-		}
-	});
-};
-
-cnnController.newArticle = function(req, res) {
-	System.find().exec(function(err, systems) {
-		if (err) {
-			console.log(err);
-		} else {
-			Character.find().exec(function(err, characters) {
+	if (req.user) {
+	  	Account.findById(req.user._id).populate('roles').exec(function(err, account){
+			Article.find().populate('author').sort('-createdAt').exec(function(err, articles) {
 				if (err) {
 					console.log(err);
 				} else {
-					res.render('newarticle', {user : req.user, systems : systems, characters : characters});
+					res.render('cnn', {user : account, articles : articles, moment : moment});
 				}
 			});
-		}
-	});
+		});
+	} else {
+		Article.find().populate('author').sort('-createdAt').exec(function(err, articles) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.render('cnn', {user : req.user, articles : articles, moment : moment});
+			}
+		});
+	}
+};
+
+cnnController.newArticle = function(req, res) {
+	if (req.user) {
+	  	Account.findById(req.user._id).populate('roles').exec(function(err, account){
+			System.find().exec(function(err, systems) {
+				if (err) {
+					console.log(err);
+				} else {
+					Character.find().exec(function(err, characters) {
+						if (err) {
+							console.log(err);
+						} else {
+							res.render('newarticle', {user : account, systems : systems, characters : characters});
+						}
+					});
+				}
+			});
+		});
+	} else {
+		System.find().exec(function(err, systems) {
+			if (err) {
+				console.log(err);
+			} else {
+				Character.find().exec(function(err, characters) {
+					if (err) {
+						console.log(err);
+					} else {
+						res.render('newarticle', {user : req.user, systems : systems, characters : characters});
+					}
+				});
+			}
+		});
+	}
 }
 
 cnnController.postArticle = function(req, res) {
@@ -67,6 +97,20 @@ cnnController.postArticle = function(req, res) {
 		})
 	} else {
 		res.redirect('/cnn')
+	}
+};
+
+cnnController.getArticle = function (req, res) {
+	if(req.user) {
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			Article.findById(req.params.id).populate('characters').populate('systems').exec(function(err, article){
+				res.render('article', {user : account, article : article});
+			});
+		});
+	} else {
+		Article.findById(req.params.id).populate('characters').populate('systems').exec(function(err, article){
+				res.render('article', {user : req.user, article : article});
+			});
 	}
 };
 

@@ -1,49 +1,75 @@
 var express = require('express');
 var Character = require('../models/character');
 var System = require('../models/system');
+var Account = require('../models/account');
 var characterController = {};
 
 characterController.characters = function(req, res){
-	Character.find({characterType : 'patron'}).exec(function(err, patrons){
-		Character.find({characterType : 'proxy'}).exec(function(err, proxies){
-			Character.find({characterType: 'wildcard'}).exec(function(err, wildcards){
-				res.render('characters', {user : req.user, patrons : patrons, proxies: proxies, wildcards: wildcards});
-			})
-		})
-	})
-}
+	if (req.user) {
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			Character.find({characterType : 'patron'}).exec(function(err, patrons){
+				Character.find({characterType : 'proxy'}).exec(function(err, proxies){
+					Character.find({characterType: 'wildcard'}).exec(function(err, wildcards){
+						res.render('characters', {user : account, patrons : patrons, proxies: proxies, wildcards: wildcards});
+					});
+				});
+			});
+		});
+	} else {
+		Character.find({characterType : 'patron'}).exec(function(err, patrons){
+			Character.find({characterType : 'proxy'}).exec(function(err, proxies){
+				Character.find({characterType: 'wildcard'}).exec(function(err, wildcards){
+					res.render('characters', {user : req.user, patrons : patrons, proxies: proxies, wildcards: wildcards});
+				});
+			});
+		});
+	}
+};
 
 characterController.character = function (req, res) {
-	Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character){
-		if (err) {
-			console.log(err);
-		} else {
-			//res.send(character);
-			res.render('character', {user : req.user, character : character});
-		}
-	});
+	if (req.user) {
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character){
+				if (err) {
+					console.log(err);
+				} else {
+					res.render('character', {user : account, character : character});
+				}
+			});
+		});
+	} else	{
+		Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character){
+			if (err) {
+				console.log(err);
+			} else {
+				res.render('character', {user : req.user, character : character});
+			}
+		});
+	}
 };
 
 characterController.creator = function (req, res) {
 	if (req.user) {
-		System.find(function(err, systems) {
-			if (err) {
-				console.log(err);
-			} else {
-				Character.find({characterType : 'patron'}, function(err, patrons) {
-					if (err) {
-						console.log(err);
-					} else {
-						Character.find({characterType : 'proxy'}, function(err, proxies) {
-							if (err) {
-								console.log(err)
-							} else {
-								res.render('charactercreator', {user : req.user, systems : systems, patrons : patrons, proxies : proxies});
-							}
-						});
-					}
-				});
-			}
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			System.find(function(err, systems) {
+				if (err) {
+					console.log(err);
+				} else {
+					Character.find({characterType : 'patron'}, function(err, patrons) {
+						if (err) {
+							console.log(err);
+						} else {
+							Character.find({characterType : 'proxy'}, function(err, proxies) {
+								if (err) {
+									console.log(err)
+								} else {
+									res.render('charactercreator', {user : account, systems : systems, patrons : patrons, proxies : proxies});
+								}
+							});
+						}
+					});
+				}
+			});
 		});
 	} else {
 		res.redirect('../login');
@@ -102,34 +128,36 @@ characterController.editor = function(req, res) {
 	backURL = req.header('Referer') || '/';
 
 	if (req.user){
-		Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character) {
-			if (err) {
-				console.log(err)
-				res.redirect(backURL, {message : err.message});
-			} else {
-				System.find(function(err, systems){
-					if (err) {
-						console.log(err);
-						res.redirect(backURL, {message : err.message});
-					} else {
-						Character.find({characterType : 'patron'}, function(err, patrons) {
-							if (err) {
-								console.log(err);
-								res.redirect(backURL, {message : err.message});
-							} else {
-								Character.find({characterType : 'proxy'}, function (err, proxies) {
-									if (err) {
-										console.log(err);
-										res.redirect(backURL, {message : err.message});
-									} else {
-										res.render('charactereditor', {user : req.user, character : character, proxies : proxies, patrons : patrons, systems : systems});
-									}
-								})
-							}
-						})
-					}
-				});
-			}
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			Character.findOne({_id : req.params.id}).populate('contact').exec(function(err, character) {
+				if (err) {
+					console.log(err)
+					res.redirect(backURL, {message : err.message});
+				} else {
+					System.find(function(err, systems){
+						if (err) {
+							console.log(err);
+							res.redirect(backURL, {message : err.message});
+						} else {
+							Character.find({characterType : 'patron'}, function(err, patrons) {
+								if (err) {
+									console.log(err);
+									res.redirect(backURL, {message : err.message});
+								} else {
+									Character.find({characterType : 'proxy'}, function (err, proxies) {
+										if (err) {
+											console.log(err);
+											res.redirect(backURL, {message : err.message});
+										} else {
+											res.render('charactereditor', {user : account, character : character, proxies : proxies, patrons : patrons, systems : systems});
+										}
+									})
+								}
+							})
+						}
+					});
+				}
+			});
 		});
 	} else {
 		res.redirect('../login')

@@ -4,8 +4,10 @@ var router = express.Router();
 
 router.get('/', cnn.index);
 
+router.get('/article:id', cnn.getArticle);
+
 router.get('/newarticle', cnn.newArticle);
 
-router.post('/postarticle', cnn.postArticle)
+router.post('/postarticle', cnn.postArticle);
 
 module.exports = router;

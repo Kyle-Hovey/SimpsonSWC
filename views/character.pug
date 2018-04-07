@@ -13,8 +13,9 @@ block content
       br
       h4 Occupation: #{character.occupation}
       br
-      h4 Species: #{character.species}
-      br
+      if Species
+        h4 Species: #{character.species}
+        br
       if (character.quirks)
         h4 Species Quirks
         p #{character.quirks}
@@ -32,8 +33,8 @@ block content
       h4 Backstory
       -var backstory = character.backstory.replace(/[\r\n]/g, '<br/>');
       p.lead !{backstory}
-      if (user)
-        if (character.characterType == 'proxy' && (user.usertype == 'controller' || user.roles.indexOf(character._id) > 0))
+      if (user && user.roles && (user.usertype == 'controller' || user.roles[0].name == character.name))
+        if (character.characterType == 'proxy' || character.characterType == 'wildcard') 
           h4 Motives
           h5 Short Term Objective
           p #{character.shortterm}

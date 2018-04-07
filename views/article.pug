@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .container
+    .jumbotron
+      h1 #{article.title}
+      p #{article.copy}
+      br
+      if ((article.systems && article.systems.length > 0 && article.systems[0] !== null) || (article.characters && article.characters.length > 0 && article.characters[0] !== null))
+          h4 More information about...
+          ul
+            if article.systems && article.systems.length > 0 && article.systems[0] !== null
+              each system in article.systems
+                li
+                  a(href='/directory/system'+system._id) #{system.name}
+            if article.characters && article.characters.length > 0 && article.characters[0] !== null
+              each character in article.characters
+                li
+                  a(href='/directory/character'+character._id) #{character.name}

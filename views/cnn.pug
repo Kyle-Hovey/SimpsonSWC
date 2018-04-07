@@ -16,25 +16,29 @@ block content
             a(href='/cnn/newarticle')
               button.btn.btn-warnning(type='button') New Story
     br
-    .row
+    .row.justify-content-center
       if articles
         each article, index in articles
           if index == 0
-            .card.m-1(style='width: 36rem;')
+            .card.m-1(style='width: 100%;')
               .card-body
                 h3.card-title #{article.title}
                 if article.author
                   h6.card-subtitle.mb-2.text-muted By #{article.author.name}
                 p.card-text #{article.brief}...
                 a.card-link(href='/cnn/article'+article._id) Read More
+              .card-footer
+                small.text-muted #{moment(article.createdAt).fromNow()}
           else
-            .card.m-1(style='width: 18rem;')
+            .card.m-1(style='width: 49%;')
               .card-body
                 h3.card-title #{article.title}
                 if article.author
                   h6.card-subtitle.mb-2.text-muted By #{article.author.name}
                 p.card-text #{article.brief}...
                 a.card-link(href='/cnn/article'+article._id) Read More
+              .card-footer
+                small.text-muted #{moment(article.createdAt).fromNow()}
 
 
 

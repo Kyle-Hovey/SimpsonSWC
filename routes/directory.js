@@ -15,9 +15,6 @@ router.get('/systemcreator', system.creator);
 //get specific system page
 router.get('/system:id', system.system);
 
-//get general system page
-router.get('/system', system.index);
-
 //get crisis creator
 router.get('/crisiscreator:id', system.crisisCreator);
 

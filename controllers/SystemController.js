@@ -6,36 +6,55 @@ var Account = require('../models/account');
 var systemController = {};
 
 systemController.directoryHome = function(req, res) {
-	System.find().populate('patrons').populate('proxies').exec(function(err, systems) {
-		if (err) {
-			console.log(err);
-		} else {
-			Character.find({characterType : 'wildcard'}, function(err, wildcards) {
+	if (req.user){
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			System.find().populate('patrons').populate('proxies').exec(function(err, systems) {
 				if (err) {
 					console.log(err);
 				} else {
-					res.render('directory', {user : req.user, systems : systems, wildcards : wildcards});
+					Character.find({characterType : 'wildcard'}, function(err, wildcards) {
+						if (err) {
+							console.log(err);
+						} else {
+							res.render('directory', {user : account, systems : systems, wildcards : wildcards});
+						}
+					});
 				}
 			});
-		}
-	});
-};
-
-systemController.index = function (req, res) {
-	System.find(function(err, systems) {
-		var systemList = {};
-
-		systems.forEach(function(system) {
-			systemList[system._systemId] = system;
 		});
-
-		res.send(systemList);
-	});
+	} else {
+		System.find().populate('patrons').populate('proxies').exec(function(err, systems) {
+			if (err) {
+				console.log(err);
+			} else {
+				Character.find({characterType : 'wildcard'}, function(err, wildcards) {
+					if (err) {
+						console.log(err);
+					} else {
+						res.render('directory', {user : req.user, systems : systems, wildcards : wildcards});
+					}
+				});
+			}
+		});
+	}
 };
 
 systemController.system = function (req, res) {
 	backURL = req.header('Referer') || '/';
-	System.findOne({_id : req.params.id}).populate('patrons').populate('proxies').exec(function(err, system){
+	if (req.user){
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			System.findOne({_id : req.params.id}).populate('patrons').populate('proxies').exec(function(err, system){
+					if (err) {
+						console.log(err);
+						res.redirect(backURL);
+					} else {
+						//res.send(system)
+						res.render('system', {user : account, system : system});
+					}
+			});
+		});
+	} else {
+		System.findOne({_id : req.params.id}).populate('patrons').populate('proxies').exec(function(err, system){
 			if (err) {
 				console.log(err);
 				res.redirect(backURL);
@@ -43,23 +62,42 @@ systemController.system = function (req, res) {
 				//res.send(system)
 				res.render('system', {user : req.user, system : system});
 			}
-	});
+		});
+	}
 };
 
 systemController.creator = function (req, res) {
-	Character.find({characterType : 'patron'}, function(err, patrons) {
-		if (err) {
-			console.log(err);
-		} else {
-			Character.find({characterType : 'proxy'}, function(err, proxies) {
+	if (req.user){
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			Character.find({characterType : 'patron'}, function(err, patrons) {
 				if (err) {
-					console.log(err)
+					console.log(err);
 				} else {
-					res.render('systemcreator', {user : req.user, patrons : patrons, proxies : proxies});
+					Character.find({characterType : 'proxy'}, function(err, proxies) {
+						if (err) {
+							console.log(err)
+						} else {
+							res.render('systemcreator', {user : account, patrons : patrons, proxies : proxies});
+						}
+					});
 				}
 			});
-		}
-	});
+		});
+	} else {
+		Character.find({characterType : 'patron'}, function(err, patrons) {
+			if (err) {
+				console.log(err);
+			} else {
+				Character.find({characterType : 'proxy'}, function(err, proxies) {
+					if (err) {
+						console.log(err)
+					} else {
+						res.render('systemcreator', {user : req.user, patrons : patrons, proxies : proxies});
+					}
+				});
+			}
+		});
+	}
 };
 
 systemController.create = function (req, res) {
@@ -100,29 +138,31 @@ systemController.create = function (req, res) {
 systemController.editor = function(req, res) {
 	backURL = req.header('Referer') || '/';
 	if (req.user){
-		System.findOne({_id : req.params.id}).exec(function(err, system){
-			if(err) {
-				console.log(err);
-				res.redirect(backURL);
-			} else {
-				Character.find({characterType : 'patron'}, function(err, patrons) {
-					if (err) {
-						console.log(err);
-						res.redirect(backURL);
-					} else {
-						Character.find({characterType : 'proxy'}, function(err, proxies) {
-							if (err) {
-								console.log(err);
-								res.redirect(backURL);
-							} else {
-								//res.send(system);
-								res.render('systemeditor', {user : req.user, system : system, patrons : patrons, proxies : proxies});
-							}
-						});
-					}
-				});
-			}
-		})
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			System.findOne({_id : req.params.id}).exec(function(err, system){
+				if(err) {
+					console.log(err);
+					res.redirect(backURL);
+				} else {
+					Character.find({characterType : 'patron'}, function(err, patrons) {
+						if (err) {
+							console.log(err);
+							res.redirect(backURL);
+						} else {
+							Character.find({characterType : 'proxy'}, function(err, proxies) {
+								if (err) {
+									console.log(err);
+									res.redirect(backURL);
+								} else {
+									//res.send(system);
+									res.render('systemeditor', {user : account, system : system, patrons : patrons, proxies : proxies});
+								}
+							});
+						}
+					});
+				}
+			});
+		});
 	} else {
 		res.redirect(backURL);
 	}
@@ -171,15 +211,27 @@ systemController.edit = function(req, res) {
 
 systemController.crisisCreator = function(req, res) {
 	backURL = req.header('Referer') || '/';
-	System.findOne({_id : req.params.id}).exec(function(err, system) {
-		if (err) {
-			console.log(err);
-			res.redirect(backURL);
-		} else {
-			res.render('crisiscreator', {user : req.user, system : system});
-		}
-	});
-
+	if (req.user){
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			System.findOne({_id : req.params.id}).exec(function(err, system) {
+				if (err) {
+					console.log(err);
+					res.redirect(backURL);
+				} else {
+					res.render('crisiscreator', {user : account, system : system});
+				}
+			});
+		});
+	} else {
+		System.findOne({_id : req.params.id}).exec(function(err, system) {
+			if (err) {
+				console.log(err);
+				res.redirect(backURL);
+			} else {
+				res.render('crisiscreator', {user : req.user, system : system});
+			}
+		});
+	}
 };
 
 systemController.createCrisis = function(req, res) {
@@ -216,18 +268,35 @@ systemController.createCrisis = function(req, res) {
 
 systemController.crisisEditor = function(req, res) {
 	backURL = req.header('Referer') || '/';
-	System.findById(req.params.id, function(err, system) {
-		if (err) {
-			console.log(err);
-			req.redirect(backURL);
-		} else {
-			function findCrisis(crisis) {
-				return crisis.crisisname == req.params.crisis;
+	if (req.user) {
+		Account.findById(req.user.id).populate('roles').exec(function(err, account) {
+			System.findById(req.params.id, function(err, system) {
+				if (err) {
+					console.log(err);
+					req.redirect(backURL);
+				} else {
+					function findCrisis(crisis) {
+						return crisis.crisisname == req.params.crisis;
+					}
+					var crisis = system.crises.find(findCrisis);
+					res.render('crisiseditor', {crisis : crisis, system : system});
+				}
+			});
+		});
+	} else {
+		System.findById(req.params.id, function(err, system) {
+			if (err) {
+				console.log(err);
+				req.redirect(backURL);
+			} else {
+				function findCrisis(crisis) {
+					return crisis.crisisname == req.params.crisis;
+				}
+				var crisis = system.crises.find(findCrisis);
+				res.render('crisiseditor', {crisis : crisis, system : system});
 			}
-			var crisis = system.crises.find(findCrisis);
-			res.render('crisiseditor', {crisis : crisis, system : system});
-		}
-	})
+		});
+	}
 }
 
 systemController.editCrisis = function(req, res) {

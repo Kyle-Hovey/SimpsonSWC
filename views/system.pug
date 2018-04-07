@@ -8,14 +8,16 @@ block content
       if user && user.usertype == 'controller'
         a(href='/directory/systemeditor' + system._id)
           button.btn.btn-primary(type='button') Edit #{system.name}
-      -var overview = system.overview.replace(/[\r\n]/g, '<br/>');
-      h4 System Overview
-      p.lead !{overview}
-      br
-      -var history = system.history.replace(/[\r\n]/g, '<br/>');
-      h4 System History
-      p.lead !{history}
-      br
+      if system.overview
+        -var overview = system.overview.replace(/[\r\n]/g, '<br/>');
+        h4 System Overview
+        p.lead !{overview}
+        br
+      if system.history
+        -var history = system.history.replace(/[\r\n]/g, '<br/>');
+        h4 System History
+        p.lead !{history}
+        br
 
       if system.patrons && system.patrons.length !== 0 & system.patrons[0] !== null
       
@@ -59,19 +61,20 @@ block content
           br
           br
       
-      if system.crises && system.crises.length !== 0 && system.crises[0] !== null
-        each crisis in system.crises
-          h4 #{crisis.crisisname}
-            |&nbsp
-            |&nbsp
-            |&nbsp
-            if user && user.usertype == 'controller'
-              a(href='crisiseditor/' + system._id + '/' + crisis.crisisname)
-                button.btn.btn-primary(type='button') Edit Crisis
-          each event in crisis.crisisevents
-            h5 #{event.eventtitle}
-            p(style='white-space:pre;') #{event.eventdescription}
-      
+      if user && user.usertype == 'controller'
+        if system.crises && system.crises.length !== 0 && system.crises[0] !== null
+          each crisis in system.crises
+            h4 #{crisis.crisisname}
+              |&nbsp
+              |&nbsp
+              |&nbsp
+              if user && user.usertype == 'controller'
+                a(href='crisiseditor/' + system._id + '/' + crisis.crisisname)
+                  button.btn.btn-primary(type='button') Edit Crisis
+            each event in crisis.crisisevents
+              h5 #{event.eventtitle}
+              p(style='white-space:pre;') #{event.eventdescription}
+        
       if user && user.usertype == 'controller'
         a(href='crisiscreator' + system._id)
           button.btn.btn-primary(type='button') Add New Crisis

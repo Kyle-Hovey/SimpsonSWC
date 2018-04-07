@@ -33,7 +33,7 @@ html
                   if (user.roles && user.roles.length > 0 && user.roles[0] !== null)
                     .dropdown-divider
                     each character in user.roles
-                      a.dropdown-item(href='/character/' + character._id) #{character.name}                
+                      a.dropdown-item(href='/directory/character' + character._id) #{character.name}                
               li.nav-item
                 a.nav-link(href='/accountmanager') Account Management
 
@@ -49,7 +49,7 @@ html
                   if (user.roles && user.roles.length > 0 && user.roles[0] !== null)
                     .dropdown-divider
                     each character in user.roles
-                      a.dropdown-item(href='/character' + character._id) #{character.name}
+                      a.dropdown-item(href='/directory/character' + character._id) #{character.name}
 
             else
               li.nav-item

@@ -84,7 +84,11 @@ accountController.logout = function(req, res) {
 
 //Go to Change password page
 accountController.changePassword = function (req, res) {
-	res.render('changepassword', {user : req.user});
+	if (req.user){
+	  	Account.findById(req.user._id).populate('roles').exec(function(err, account){
+			res.render('changepassword', {user : account});
+		});
+	} else res.render('changepassword', {user : req.user});
 }
 
 accountController.doChangePassword = function(req, res) {
@@ -101,12 +105,20 @@ accountController.doChangePassword = function(req, res) {
 
 //Go to Profile Page
 accountController.profile = function(req, res) {
-	res.render('profile', {user : req.user});
+	if (req.user){
+	  	Account.findById(req.user._id).populate('roles').exec(function(err, account){
+			res.render('profile', {user : account});
+		});
+	} else res.render('profile', {user : req.user});
 };
 
 //Go to Edit Profile Page
 accountController.editProfile = function(req,res) {
-	res.render('editprofile', {user: req.user});
+	if (req.user){
+	  	Account.findById(req.user._id).populate('roles').exec(function(err, account){
+			res.render('editprofile', {user: account});
+		});
+	} else res.render('editprofile', {user: req.user});
 };
 
 //Edit Profile
@@ -132,13 +144,25 @@ accountController.doEditProfile = function(req, res) {
 };
 
 accountController.accountManager = function(req, res) {
-	Account.find().populate('roles').exec(function(err, accounts) {
-		if (err) {
-			console.log(err);
-		} else {
-			res.render('accountmanager', {user : req.user, accounts : accounts});
-		}
-	});
+	if (req.user){
+	  	Account.findById(req.user._id).populate('roles').exec(function(err, account){
+			Account.find().populate('roles').exec(function(err, accounts) {
+				if (err) {
+					console.log(err);
+				} else {
+					res.render('accountmanager', {user : account, accounts : accounts});
+				}
+			});
+		});
+	} else {
+		Account.find().populate('roles').exec(function(err, accounts) {
+			if (err) {
+				console.log(err);
+			} else {
+				res.render('accountmanager', {user : req.user, accounts : accounts});
+			}
+		});
+	}
 };
 
 accountController.passwordReset = function(req, res) {
