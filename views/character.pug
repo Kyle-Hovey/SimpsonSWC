@@ -33,21 +33,22 @@ block content
       h4 Backstory
       -var backstory = character.backstory.replace(/[\r\n]/g, '<br/>');
       p.lead !{backstory}
-      if (user && user.roles && (user.usertype == 'controller' || user.roles[0].name == character.name))
-        if (character.characterType == 'proxy' || character.characterType == 'wildcard') 
-          h4 Motives
-          h5 Short Term Objective
-          p #{character.shortterm}
-          br
-          h5 Long Term Objective
-          p #{character.longterm}
-          br
-          h4 Skills and Knowledge
-          ul
-            each skill in character.skills
-              li #{skill}
-          br
-          h4 Special Abilities
-          ul
-            each ability in character.special
-              li #{ability}
+      if (user && user.roles && user.roles.length > 0 && user.roles[0] !== null)
+        if (user.usertype == 'controller' || user.roles[0].name == character.name)
+          if (character.characterType == 'proxy' || character.characterType == 'wildcard') 
+            h4 Motives
+            h5 Short Term Objective
+            p #{character.shortterm}
+            br
+            h5 Long Term Objective
+            p #{character.longterm}
+            br
+            h4 Skills and Knowledge
+            ul
+              each skill in character.skills
+                li #{skill}
+            br
+            h4 Special Abilities
+            ul
+              each ability in character.special
+                li #{ability}
